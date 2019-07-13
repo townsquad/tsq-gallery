@@ -119,6 +119,41 @@
           }
         }
       }
+    },
+    "ngx-tsq-gallery": {
+      "projectType": "library",
+      "root": "projects/ngx-tsq-gallery",
+      "sourceRoot": "projects/ngx-tsq-gallery/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-tsq-gallery/tsconfig.lib.json",
+            "project": "projects/ngx-tsq-gallery/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-tsq-gallery/src/test.ts",
+            "tsConfig": "projects/ngx-tsq-gallery/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-tsq-gallery/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-tsq-gallery/tsconfig.lib.json",
+              "projects/ngx-tsq-gallery/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }},
   "defaultProject": "tsq-gallery"
 }
