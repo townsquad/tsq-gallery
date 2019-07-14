@@ -11,7 +11,7 @@ import {AppComponent} from './app.component';
   ],
   imports: [
     BrowserModule,
-    TSqGalleryModule
+    TSqGalleryModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

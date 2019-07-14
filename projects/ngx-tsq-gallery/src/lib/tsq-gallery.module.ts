@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 
-import {TSqGalleryComponent} from './tsq-gallery.component';
+import {TSqGalleryComponent} from './components/main-tsq-gallery/main-tsq-gallery.component';
 
 @NgModule({
   declarations: [
