@@ -19,11 +19,11 @@
       "dom"
     ],
     "paths": {
-      "ngx-tsq-gallery": [
-        "dist/ngx-tsq-gallery"
+      "tsq-gallery": [
+        "dist/tsq-gallery"
       ],
-      "ngx-tsq-gallery/*": [
-        "dist/ngx-tsq-gallery/*"
+      "tsq-gallery/*": [
+        "dist/tsq-gallery/*"
       ]
     }
   }

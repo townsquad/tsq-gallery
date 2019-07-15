@@ -1,5 +1,5 @@
 {
-  "name": "ngx-tsq-gallery",
+  "name": "tsq-gallery",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^6.1.9",

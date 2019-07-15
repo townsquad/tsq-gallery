@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
-import {TSqGalleryModule} from '../../projects/ngx-tsq-gallery/src/lib/tsq-gallery.module';
+import {TSqGalleryModule} from '../../projects/tsq-gallery/src/lib/tsq-gallery.module';
 
 import {AppComponent} from './app.component';
 

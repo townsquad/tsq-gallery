@@ -1,5 +1,5 @@
 /*
- * Public API Surface of ngx-tsq-gallery
+ * Public API Surface of tsq-gallery
  */
 
 export * from './lib/services/tsq-gallery.service';
