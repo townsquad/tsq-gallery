@@ -1,1 +1,5 @@
-<div>QWEQWEWQEW</div>
+<div id="tsq-gallery">
+  <ng-container  *ngFor="let file of files">
+    <ng-container *ngTemplateOutlet="fileDisplayTemplate; context: getContext(file)"></ng-container>
+  </ng-container>
+</div>

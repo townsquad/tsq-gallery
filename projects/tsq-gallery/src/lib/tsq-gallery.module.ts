@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
 import {TSqGalleryComponent} from './components/main-tsq-gallery/main-tsq-gallery.component';
 
@@ -6,7 +7,9 @@ import {TSqGalleryComponent} from './components/main-tsq-gallery/main-tsq-galler
   declarations: [
     TSqGalleryComponent,
   ],
-  imports: [],
+  imports: [
+    CommonModule,
+  ],
   exports: [
     TSqGalleryComponent,
   ]

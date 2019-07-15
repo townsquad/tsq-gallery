@@ -1,1 +1,5 @@
-<tsq-gallery></tsq-gallery>
+<tsq-gallery [files]="files" [fileDisplayTemplate]="fileDisplayTemplate"></tsq-gallery>
+
+<ng-template #fileDisplayTemplate let-url="url" let-alt="alt">
+  <img [src]="url" [alt]="alt">
+</ng-template>
