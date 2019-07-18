@@ -1,3 +1,13 @@
 #tsq-gallery {
   display: flex;
+  padding: 16px;
+  background: white;
+  box-shadow: 5px 5px 20px rgba(28, 46, 82, 0.15);
+  border-radius: 5px;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 0;
+    background: transparent;
+  }
 }

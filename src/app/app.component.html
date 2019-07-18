@@ -1,5 +1,7 @@
-<tsq-gallery [files]="files" [fileDisplayTemplate]="fileDisplayTemplate"></tsq-gallery>
+<div id="app">
+  <tsq-gallery [files]="files" [fileDisplayTemplate]="fileDisplayTemplate"></tsq-gallery>
+</div>
 
 <ng-template #fileDisplayTemplate let-url="url" let-alt="alt">
-  <img [src]="url" [alt]="alt">
+  <div class="gallery-item" [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
 </ng-template>

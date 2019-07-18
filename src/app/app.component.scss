@@ -1,4 +1,29 @@
-img {
-  max-width: 200px;
-  max-height: 200px;
+#app {
+  padding: 100px;
+}
+
+.gallery-item {
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+  position: relative;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border: 1px solid #383838;
+  border-radius: 5px;
+
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+
+  &:last-child:after {
+    content: "";
+    width: 16px;
+    height: 1px;
+    position: absolute;
+    top: 0;
+    left: 100%;
+  }
 }
