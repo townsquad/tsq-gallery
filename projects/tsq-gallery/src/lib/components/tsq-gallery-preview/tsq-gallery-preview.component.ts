@@ -1,7 +1,10 @@
 import {Component, Input, Renderer2, TemplateRef} from '@angular/core';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
-import {TSqGalleryTopPreviewTemplateRefContext} from '../../models/tsq-gallery-template-ref-context.model';
+import {
+  TSqGalleryBottomPreviewTemplateRefContext,
+  TSqGalleryTopPreviewTemplateRefContext
+} from '../../models/tsq-gallery-template-ref-context.model';
 
 @Component({
   selector: 'tsq-gallery-preview',
@@ -41,6 +44,12 @@ export class TSqGalleryPreviewComponent {
     };
   }
 
+  get bottomPreviewContext(): TSqGalleryBottomPreviewTemplateRefContext {
+    return {
+      $implicit: this.selectedFileToDisplay,
+    };
+  }
+
   open(index?: number) {
     this.isOpen = true;
     this.selectedFileIndex = index;
@@ -54,12 +63,41 @@ export class TSqGalleryPreviewComponent {
   }
 
   onKeyUp(keyboardEvent: KeyboardEvent) {
+    const key = keyboardEvent.key;
     if (!!this.files) {
-      if (keyboardEvent.key === 'ArrowRight' && this.selectedFileIndex !== this.files.length - 1) {
+      if (this.isArrowRight(keyboardEvent.key) && this.canGoForward(this.selectedFileIndex, this.files.length)) {
         this.selectedFileIndex++;
-      } else if (keyboardEvent.key === 'ArrowLeft' && this.selectedFileIndex !== 0) {
+      } else if (this.isArrowLeft(key) && this.canGoBack(this.selectedFileIndex)) {
         this.selectedFileIndex--;
+      } else if (this.isEsc(key)) {
+        this.close();
       }
     }
   }
+
+  private canGoForward(selectedIndex: number, fileListLength: number): boolean {
+    return selectedIndex < fileListLength - 1;
+  }
+
+  private canGoBack(selectedIndex: number): boolean {
+    return selectedIndex > 0;
+  }
+
+  private isArrowLeft(key: string): boolean {
+    return key === SupportedArrows.ArrowLeft;
+  }
+
+  private isArrowRight(key: string): boolean {
+    return key === SupportedArrows.ArrowRight;
+  }
+
+  private isEsc(key: string): boolean {
+    return key === SupportedArrows.Esc;
+  }
+}
+
+enum SupportedArrows {
+  ArrowRight = 'ArrowRight',
+  ArrowLeft = 'ArrowLeft',
+  Esc = 'Escape',
 }

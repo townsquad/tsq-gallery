@@ -11,3 +11,8 @@ export interface TSqGalleryTopPreviewTemplateRefContext {
   file: TSqGalleryFileModel;
   fns?: {[key: string]: () => any};
 }
+
+export interface TSqGalleryBottomPreviewTemplateRefContext {
+  $implicit: TSqGalleryFileModel;
+  fns?: {[key: string]: () => any};
+}

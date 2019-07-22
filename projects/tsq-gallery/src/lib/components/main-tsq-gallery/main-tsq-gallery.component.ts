@@ -1,7 +1,8 @@
-import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {
+  TSqGalleryBottomPreviewTemplateRefContext,
   TSqGalleryListItemTemplateRefContext,
   TSqGalleryTopPreviewTemplateRefContext
 } from '../../models/tsq-gallery-template-ref-context.model';
@@ -12,22 +13,16 @@ import {TSqGalleryPreviewComponent} from '../tsq-gallery-preview/tsq-gallery-pre
   templateUrl: 'main-tsq-gallery.component.html',
   styleUrls: ['main-tsq-gallery.component.scss'],
 })
-export class TSqGalleryComponent implements OnInit {
+export class TSqGalleryComponent {
 
   @ViewChild(TSqGalleryPreviewComponent, {static: false}) preview: TSqGalleryPreviewComponent;
 
   @Input() files: TSqGalleryFileModel[];
   @Input() fileDisplayTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
   @Input() topPreviewTemplate: TemplateRef<TSqGalleryTopPreviewTemplateRefContext>;
-  @Input() bottomPreviewTemplate: TemplateRef<any>;
+  @Input() bottomPreviewTemplate: TemplateRef<TSqGalleryBottomPreviewTemplateRefContext>;
 
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
-
-  open = (index?: number) => {
+  contextOpen = (index?: number) => {
     this.preview.open(index);
   }
 
@@ -37,7 +32,7 @@ export class TSqGalleryComponent implements OnInit {
       url: file.displayUrl,
       alt: file.displayAlt,
       fns: {
-        open: this.open,
+        open: this.contextOpen,
       }
     };
   }

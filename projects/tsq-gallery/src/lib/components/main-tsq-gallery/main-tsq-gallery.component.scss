@@ -26,6 +26,8 @@
   border: 1px solid whitesmoke;
   border-radius: 5px;
 
+  cursor: pointer;
+
   &:not(:last-child) {
     margin-right: 8px;
   }

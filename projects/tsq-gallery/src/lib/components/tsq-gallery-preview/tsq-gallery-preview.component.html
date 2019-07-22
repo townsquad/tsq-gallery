@@ -12,6 +12,6 @@
   </ng-container>
 
   <div class="preview-bottom" *ngIf="!!selectedFileToDisplay">
-    <ng-container *ngTemplateOutlet="bottomPreviewTemplate; context: {$implicit: this.selectedFileToDisplay}"></ng-container>
+    <ng-container *ngTemplateOutlet="bottomPreviewTemplate; context: bottomPreviewContext"></ng-container>
   </div>
 </div>
