@@ -1,17 +1,17 @@
 <div id="tsq-gallery-preview"
      [ngStyle]="{display: isPreviewOpen ? 'flex' : 'none'}" (keyup)="onKeyUp($event)" tabindex="0">
 
-  <div class="preview-top">
+  <div class="preview-top" *ngIf="!!selectedFileToDisplay">
     <ng-container *ngTemplateOutlet="topPreviewTemplate; context: topPreviewContext"></ng-container>
   </div>
 
-  <ng-container *ngIf="!!files">
+  <ng-container *ngIf="!!files && !!selectedFileToDisplay">
     <div class="preview-body">
       <img [src]="selectedFileToDisplay.displayUrl" [alt]="selectedFileToDisplay.displayAlt">
     </div>
   </ng-container>
 
-  <div class="preview-bottom">
+  <div class="preview-bottom" *ngIf="!!selectedFileToDisplay">
     <ng-container *ngTemplateOutlet="bottomPreviewTemplate; context: {$implicit: this.selectedFileToDisplay}"></ng-container>
   </div>
 </div>

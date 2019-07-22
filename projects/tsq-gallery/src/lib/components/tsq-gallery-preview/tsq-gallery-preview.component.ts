@@ -29,7 +29,7 @@ export class TSqGalleryPreviewComponent {
   }
 
   get selectedFileToDisplay(): TSqGalleryFileModel {
-    return this.files[!!this.selectedFileIndex || this.selectedFileIndex === 0 ? this.selectedFileIndex : 0];
+    return this.files && this.files[!!this.selectedFileIndex || this.selectedFileIndex === 0 ? this.selectedFileIndex : 0];
   }
 
   get topPreviewContext(): TSqGalleryTopPreviewTemplateRefContext {
