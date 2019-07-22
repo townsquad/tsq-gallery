@@ -9,13 +9,13 @@ import {TSqGalleryFileModel} from '../../projects/tsq-gallery/src/lib/models/tsq
 export class AppComponent {
 
   files: TSqGalleryFileModel[] = [
-    {displayUrl: './assets/images/01.png'},
-    {displayUrl: './assets/images/02.png'},
-    {displayUrl: './assets/images/03.png'},
-    {displayUrl: './assets/images/04.png'},
-    {displayUrl: './assets/images/05.png'},
-    {displayUrl: './assets/images/06.png'},
-    {displayUrl: './assets/images/07.png'},
-    {displayUrl: './assets/images/08.png'},
+    {name: 'file_01.png', displayUrl: './assets/images/01.png'},
+    {name: 'file_02.png', displayUrl: './assets/images/02.png'},
+    {name: 'file_03.png', displayUrl: './assets/images/03.png'},
+    {name: 'file_04.png', displayUrl: './assets/images/04.png'},
+    {name: 'file_05.png', displayUrl: './assets/images/05.png'},
+    {name: 'file_06.png', displayUrl: './assets/images/06.png'},
+    {name: 'file_07.png', displayUrl: './assets/images/07.png'},
+    {name: 'file_08.png', displayUrl: './assets/images/08.png'},
   ];
 }

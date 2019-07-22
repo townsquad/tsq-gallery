@@ -1,9 +1,19 @@
 <div id="app">
-  <tsq-gallery [files]="files" [fileDisplayTemplate]="fileDisplayTemplate"></tsq-gallery>
+  <tsq-gallery [files]="files"
+               [fileDisplayTemplate]="fileDisplayTemplate"
+               [topPreviewTemplate]="topPreviewTemplate"></tsq-gallery>
 
   <div class="qwe"></div>
 </div>
 
-<ng-template #fileDisplayTemplate let-url="url" let-alt="alt">
-  <div class="gallery-item" [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
+<ng-template #fileDisplayTemplate
+             let-index="index" let-url="url" let-alt="alt" let-fns="fns">
+  <div class="gallery-item" (click)="fns.open(index)" [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
+</ng-template>
+
+<ng-template #topPreviewTemplate let-file="file" let-fns="fns">
+  <div class="gallery-top-preview">
+    <div>{{file.name}}</div>
+    <div (click)="fns.close()">X</div>
+  </div>
 </ng-template>

@@ -28,6 +28,22 @@
   }
 }
 
+.gallery-top-preview {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+
+  > div:first-child {
+    color: greenyellow;
+    font-weight: bold;
+  }
+
+  > div:last-child {
+    color: greenyellow;
+    font-weight: bold;
+  }
+}
+
 .qwe {
   background: yellow;
   height: 1000px;

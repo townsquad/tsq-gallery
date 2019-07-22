@@ -1,7 +1,8 @@
 <div id="tsq-gallery">
-  <ng-container  *ngFor="let file of files">
-    <ng-container *ngTemplateOutlet="fileDisplayTemplate; context: getContext(file)"></ng-container>
+  <ng-container  *ngFor="let file of files; let i = index">
+    <ng-container *ngTemplateOutlet="fileDisplayTemplate; context: getListItemContext(file, i)"></ng-container>
   </ng-container>
 </div>
 
-<tsq-gallery-preview></tsq-gallery-preview>
+<tsq-gallery-preview [files]="files"
+                     [topPreviewTemplate]="topPreviewTemplate" #preview></tsq-gallery-preview>

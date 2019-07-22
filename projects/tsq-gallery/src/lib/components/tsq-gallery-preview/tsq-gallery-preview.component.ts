@@ -1,20 +1,58 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, Input, Renderer2, TemplateRef} from '@angular/core';
+
+import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
+import {TSqGalleryTopPreviewTemplateRefContext} from '../../models/tsq-gallery-template-ref-context.model';
 
 @Component({
   selector: 'tsq-gallery-preview',
   templateUrl: 'tsq-gallery-preview.component.html',
   styleUrls: ['tsq-gallery-preview.component.scss']
 })
-export class TsqGalleryPreviewComponent implements OnInit {
+export class TSqGalleryPreviewComponent {
+
+  @Input() files: TSqGalleryFileModel[];
+  @Input() topPreviewTemplate: TemplateRef<TSqGalleryTopPreviewTemplateRefContext>;
+
+  private isOpen: boolean;
+  private selectedFileIndex: number;
 
   constructor(private renderer: Renderer2) {
+  }
+
+  contextClose = () => {
+    this.close();
+  }
+
+  get isPreviewOpen(): boolean {
+    return this.isOpen;
+  }
+
+  get selectedFileToDisplay(): TSqGalleryFileModel {
+    return this.files[!!this.selectedFileIndex || this.selectedFileIndex === 0 ? this.selectedFileIndex : 0];
+  }
+
+  getTopPreviewContext(): TSqGalleryTopPreviewTemplateRefContext {
+    return {
+      file: this.selectedFileToDisplay,
+      fns: {
+        close: this.contextClose,
+      },
+    };
+  }
+
+  open(index?: number) {
+    this.isOpen = true;
+    this.selectedFileIndex = index;
     this.renderer.setStyle(document.body, 'overflow', 'hidden');
   }
 
-  ngOnInit() {
+  close() {
+    this.isOpen = false;
+    this.selectedFileIndex = undefined;
+    this.renderer.removeStyle(document.body, 'overflow');
   }
 
   click() {
-    this.renderer.removeStyle(document.body, 'overflow');
+    this.close();
   }
 }

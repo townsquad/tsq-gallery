@@ -1,3 +1,18 @@
-<div id="tsq-gallery-preview" (click)="click()">
+<div id="tsq-gallery-preview"
+     [ngStyle]="{display: isPreviewOpen ? 'flex' : 'none'}"
+     (click)="click()">
 
+  <div class="preview-top">
+    <ng-container *ngTemplateOutlet="topPreviewTemplate; context: getTopPreviewContext()"></ng-container>
+  </div>
+
+  <ng-container *ngIf="!!files">
+    <div class="preview-body">
+      <img [src]="selectedFileToDisplay.displayUrl" [alt]="selectedFileToDisplay.displayAlt">
+    </div>
+  </ng-container>
+
+  <div class="preview-bottom">
+    QWE
+  </div>
 </div>

@@ -124,7 +124,7 @@
       "projectType": "library",
       "root": "projects/tsq-gallery",
       "sourceRoot": "projects/tsq-gallery/src",
-      "prefix": "lib",
+      "prefix": "tsq",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
