@@ -1,13 +1,32 @@
 #tsq-gallery {
-  display: flex;
   padding: 16px;
+
   background: white;
   box-shadow: 5px 5px 20px rgba(28, 46, 82, 0.15);
   border-radius: 5px;
+
   overflow-x: auto;
+  white-space: nowrap;
 
   &::-webkit-scrollbar {
     height: 0;
     background: transparent;
+  }
+}
+
+.default-gallery-item {
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  position: relative;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border: 1px solid whitesmoke;
+  border-radius: 5px;
+
+  &:not(:last-child) {
+    margin-right: 8px;
   }
 }

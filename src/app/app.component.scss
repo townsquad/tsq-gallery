@@ -5,7 +5,7 @@
 .gallery-item {
   width: 200px;
   height: 200px;
-  flex-shrink: 0;
+  display: inline-block;
   position: relative;
 
   background-repeat: no-repeat;
@@ -16,15 +16,6 @@
 
   &:not(:last-child) {
     margin-right: 8px;
-  }
-
-  &:last-child:after {
-    content: "";
-    width: 16px;
-    height: 1px;
-    position: absolute;
-    top: 0;
-    left: 100%;
   }
 }
 

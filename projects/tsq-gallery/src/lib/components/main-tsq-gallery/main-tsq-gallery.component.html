@@ -1,9 +1,13 @@
 <div id="tsq-gallery">
   <ng-container  *ngFor="let file of files; let i = index">
-    <ng-container *ngTemplateOutlet="fileDisplayTemplate; context: getListItemContext(file, i)"></ng-container>
+    <ng-container *ngTemplateOutlet="fileDisplayTemplate || defaultFileDisplayTemplate; context: getListItemContext(file, i)"></ng-container>
   </ng-container>
 </div>
 
 <tsq-gallery-preview [files]="files"
                      [topPreviewTemplate]="topPreviewTemplate"
                      [bottomPreviewTemplate]="bottomPreviewTemplate" #preview></tsq-gallery-preview>
+
+<ng-template #defaultFileDisplayTemplate let-index="index" let-url="url" let-alt="alt" let-fns="fns">
+  <div class="default-gallery-item" (click)="fns.open(index)" [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
+</ng-template>
