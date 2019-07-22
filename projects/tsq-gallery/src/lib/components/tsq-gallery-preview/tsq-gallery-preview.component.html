@@ -1,9 +1,8 @@
 <div id="tsq-gallery-preview"
-     [ngStyle]="{display: isPreviewOpen ? 'flex' : 'none'}"
-     (click)="click()">
+     [ngStyle]="{display: isPreviewOpen ? 'flex' : 'none'}" (keyup)="onKeyUp($event)" tabindex="0">
 
   <div class="preview-top">
-    <ng-container *ngTemplateOutlet="topPreviewTemplate; context: getTopPreviewContext()"></ng-container>
+    <ng-container *ngTemplateOutlet="topPreviewTemplate; context: topPreviewContext"></ng-container>
   </div>
 
   <ng-container *ngIf="!!files">
@@ -13,6 +12,6 @@
   </ng-container>
 
   <div class="preview-bottom">
-    QWE
+    <ng-container *ngTemplateOutlet="bottomPreviewTemplate; context: {$implicit: this.selectedFileToDisplay}"></ng-container>
   </div>
 </div>

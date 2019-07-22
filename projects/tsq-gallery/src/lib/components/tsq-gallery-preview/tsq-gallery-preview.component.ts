@@ -12,6 +12,7 @@ export class TSqGalleryPreviewComponent {
 
   @Input() files: TSqGalleryFileModel[];
   @Input() topPreviewTemplate: TemplateRef<TSqGalleryTopPreviewTemplateRefContext>;
+  @Input() bottomPreviewTemplate: TemplateRef<any>;
 
   private isOpen: boolean;
   private selectedFileIndex: number;
@@ -31,7 +32,7 @@ export class TSqGalleryPreviewComponent {
     return this.files[!!this.selectedFileIndex || this.selectedFileIndex === 0 ? this.selectedFileIndex : 0];
   }
 
-  getTopPreviewContext(): TSqGalleryTopPreviewTemplateRefContext {
+  get topPreviewContext(): TSqGalleryTopPreviewTemplateRefContext {
     return {
       file: this.selectedFileToDisplay,
       fns: {
@@ -52,7 +53,13 @@ export class TSqGalleryPreviewComponent {
     this.renderer.removeStyle(document.body, 'overflow');
   }
 
-  click() {
-    this.close();
+  onKeyUp(keyboardEvent: KeyboardEvent) {
+    if (!!this.files) {
+      if (keyboardEvent.key === 'ArrowRight' && this.selectedFileIndex !== this.files.length - 1) {
+        this.selectedFileIndex++;
+      } else if (keyboardEvent.key === 'ArrowLeft' && this.selectedFileIndex !== 0) {
+        this.selectedFileIndex--;
+      }
+    }
   }
 }

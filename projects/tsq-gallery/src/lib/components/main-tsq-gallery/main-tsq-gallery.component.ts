@@ -19,6 +19,7 @@ export class TSqGalleryComponent implements OnInit {
   @Input() files: TSqGalleryFileModel[];
   @Input() fileDisplayTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
   @Input() topPreviewTemplate: TemplateRef<TSqGalleryTopPreviewTemplateRefContext>;
+  @Input() bottomPreviewTemplate: TemplateRef<any>;
 
   constructor() {
   }

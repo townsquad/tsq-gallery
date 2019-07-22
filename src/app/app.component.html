@@ -1,7 +1,8 @@
 <div id="app">
   <tsq-gallery [files]="files"
                [fileDisplayTemplate]="fileDisplayTemplate"
-               [topPreviewTemplate]="topPreviewTemplate"></tsq-gallery>
+               [topPreviewTemplate]="topPreviewTemplate"
+               [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
 
   <div class="qwe"></div>
 </div>
@@ -15,5 +16,11 @@
   <div class="gallery-top-preview">
     <div>{{file.name}}</div>
     <div (click)="fns.close()">X</div>
+  </div>
+</ng-template>
+
+<ng-template #bottomPreviewTemplate let-file>
+  <div class="gallery-bottom-preview">
+    <div (click)="downloadFile(file)">Download</div>
   </div>
 </ng-template>
