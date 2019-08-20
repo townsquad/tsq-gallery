@@ -1,24 +1,13 @@
 # NgxTsqGallery
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.3.
+Angular file preview and carrousel viewer for images and pdfs.
 
-## Code scaffolding
+## Usage
 
-Run `ng generate component component-name --project tsq-gallery` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ngx-tsq-gallery`.
-> Note: Don't forget to add `--project tsq-gallery` or else it will be added to the default project in your `angular.json` file. 
+Install via `yarn tsq-gallery` or `npm install tsq-gallery`;
+Import to your app.modules.
 
-## Build
+## Demo
 
-Run `ng build tsq-gallery` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Publishing
-
-After building your library with `ng build tsq-gallery`, go to the dist folder `cd dist/ngx-tsq-gallery` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test tsq-gallery` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Install dependencies via `yarn` or `npm install`;
+Run locally at [localhost:4200](http://localhost:4200/) with `ng serve`

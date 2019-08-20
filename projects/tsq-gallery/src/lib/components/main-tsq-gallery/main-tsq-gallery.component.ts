@@ -21,6 +21,12 @@ export class TSqGalleryComponent {
   @Input() fileDisplayTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
   @Input() topPreviewTemplate: TemplateRef<TSqGalleryTopPreviewTemplateRefContext>;
   @Input() bottomPreviewTemplate: TemplateRef<TSqGalleryBottomPreviewTemplateRefContext>;
+  @Input() loadingTemplate: TemplateRef<any>;
+  @Input() showLoading = false;
+  @Input() hasMiniPreviews = true;
+  @Input() backdropClickClose = true;
+  @Input() displayNavigation = true;
+  @Input() displayNavigationIndex = true;
 
   contextOpen = (index?: number) => {
     this.preview.open(index);
@@ -29,8 +35,8 @@ export class TSqGalleryComponent {
   getListItemContext(file: TSqGalleryFileModel, index: number): TSqGalleryListItemTemplateRefContext {
     return {
       index,
-      url: file.displayUrl,
-      alt: file.displayAlt,
+      url: file && file.displayUrl,
+      alt: file && file.displayAlt,
       fns: {
         open: this.contextOpen,
       }

@@ -1,27 +1,43 @@
-import {Component, Input, Renderer2, TemplateRef} from '@angular/core';
+import {Component, Input, Renderer2, TemplateRef, ElementRef, ViewChild} from '@angular/core';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
+import {galleryAnimations} from '../../utils/gallery.animations';
 import {
   TSqGalleryBottomPreviewTemplateRefContext,
   TSqGalleryTopPreviewTemplateRefContext
 } from '../../models/tsq-gallery-template-ref-context.model';
 
+enum SupportedKeys {
+  ArrowRight = 'ArrowRight',
+  ArrowLeft = 'ArrowLeft',
+  Esc = 'Escape',
+}
+
 @Component({
   selector: 'tsq-gallery-preview',
   templateUrl: 'tsq-gallery-preview.component.html',
-  styleUrls: ['tsq-gallery-preview.component.scss']
+  styleUrls: ['tsq-gallery-preview.component.scss'],
+  animations: [galleryAnimations],
 })
 export class TSqGalleryPreviewComponent {
 
   @Input() files: TSqGalleryFileModel[];
   @Input() topPreviewTemplate: TemplateRef<TSqGalleryTopPreviewTemplateRefContext>;
   @Input() bottomPreviewTemplate: TemplateRef<any>;
+  @Input() loadingTemplate: TemplateRef<any>;
+  @Input() showLoading: boolean;
+  @Input() backdropClickClose: boolean;
+  @Input() displayNavigation: boolean;
+  @Input() displayNavigationIndex: boolean;
+
+  imageRotation = 0;
+  imageZoom = 1;
+  selectedFileIndex: number;
+  @ViewChild('backdrop') backdropRef:ElementRef;
 
   private isOpen: boolean;
-  private selectedFileIndex: number;
 
-  constructor(private renderer: Renderer2) {
-  }
+  constructor(private renderer: Renderer2) { }
 
   contextClose = () => {
     this.close();
@@ -52,11 +68,15 @@ export class TSqGalleryPreviewComponent {
 
   open(index?: number) {
     this.isOpen = true;
-    this.selectedFileIndex = index;
+    this.selectedFileIndex = index || 0;
     this.renderer.setStyle(document.body, 'overflow', 'hidden');
+    setTimeout(() => this.backdropRef.nativeElement.focus(), 50);
   }
 
   close() {
+    this.imageRotation = 0;
+    this.imageZoom = 1;
+
     this.isOpen = false;
     this.selectedFileIndex = undefined;
     this.renderer.removeStyle(document.body, 'overflow');
@@ -64,40 +84,69 @@ export class TSqGalleryPreviewComponent {
 
   onKeyUp(keyboardEvent: KeyboardEvent) {
     const key = keyboardEvent.key;
-    if (!!this.files) {
-      if (this.isArrowRight(keyboardEvent.key) && this.canGoForward(this.selectedFileIndex, this.files.length)) {
-        this.selectedFileIndex++;
-      } else if (this.isArrowLeft(key) && this.canGoBack(this.selectedFileIndex)) {
-        this.selectedFileIndex--;
+    if (!this.showLoading && !!this.files) {
+      if (this.isArrowRight(keyboardEvent.key) && this.canGoFoward()) {
+        this.goFoward();
+      } else if (this.isArrowLeft(key) && this.canGoBack()) {
+        this.goBack();
       } else if (this.isEsc(key)) {
         this.close();
       }
     }
   }
 
-  private canGoForward(selectedIndex: number, fileListLength: number): boolean {
-    return selectedIndex < fileListLength - 1;
+  zoomIn() {
+    if (this.canZoomIn()) {
+      this.imageZoom += 0.1;
+    }
+  }
+  canZoomIn(): boolean {
+    return this.imageZoom < 2;
   }
 
-  private canGoBack(selectedIndex: number): boolean {
-    return selectedIndex > 0;
+  zoomOut() {
+    if (this.canZoomOut()) {
+      this.imageZoom -= 0.1;
+    }
+  }
+
+  canZoomOut(): boolean {
+    return this.imageZoom > 1;
+  }
+
+  turnLeft() {
+    this.imageRotation -= 90;
+  }
+
+  turnRight() {
+    this.imageRotation += 90;
+  }
+
+  private goFoward() {
+    this.selectedFileIndex++;
+  }
+
+  private canGoFoward(): boolean {
+    return this.selectedFileIndex < this.files.length - 1;
+  }
+
+  private goBack() {
+    this.selectedFileIndex--;
+  }
+
+  private canGoBack(): boolean {
+    return this.selectedFileIndex > 0;
   }
 
   private isArrowLeft(key: string): boolean {
-    return key === SupportedArrows.ArrowLeft;
+    return key === SupportedKeys.ArrowLeft;
   }
 
   private isArrowRight(key: string): boolean {
-    return key === SupportedArrows.ArrowRight;
+    return key === SupportedKeys.ArrowRight;
   }
 
   private isEsc(key: string): boolean {
-    return key === SupportedArrows.Esc;
+    return key === SupportedKeys.Esc;
   }
-}
-
-enum SupportedArrows {
-  ArrowRight = 'ArrowRight',
-  ArrowLeft = 'ArrowLeft',
-  Esc = 'Escape',
 }

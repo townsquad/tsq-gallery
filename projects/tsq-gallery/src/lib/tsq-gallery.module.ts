@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {TSqGalleryComponent} from './components/main-tsq-gallery/main-tsq-gallery.component';
 import {TSqGalleryPreviewComponent} from './components/tsq-gallery-preview/tsq-gallery-preview.component';
@@ -11,6 +12,7 @@ import {TSqGalleryPreviewComponent} from './components/tsq-gallery-preview/tsq-g
   ],
   imports: [
     CommonModule,
+    BrowserAnimationsModule,
   ],
   exports: [
     TSqGalleryComponent,

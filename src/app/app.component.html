@@ -1,26 +1,49 @@
 <div id="app">
+  <h1>Carrousel preview</h1>
+  <tsq-gallery [files]="files"></tsq-gallery>
+
+  <h1>With custom actions and display</h1>
   <tsq-gallery [files]="files"
                [fileDisplayTemplate]="fileDisplayTemplate"
                [topPreviewTemplate]="topPreviewTemplate"
                [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
 
-  <div class="qwe"></div>
+  <h1>Without preview</h1>
+  <tsq-gallery [files]="files"
+               [hasMiniPreviews]="false"
+               [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
+
+  <tsq-gallery [files]="files"
+               [hasMiniPreviews]="false"
+               [fileDisplayTemplate]="singleNav"
+               [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
+
 </div>
 
 <ng-template #fileDisplayTemplate
              let-index="index" let-url="url" let-alt="alt" let-fns="fns">
-  <div class="gallery-item" (click)="fns.open(index)" [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
+  <div class="gallery-item pointer-cursor"
+       (click)="fns.open(index)"
+       [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
 </ng-template>
 
 <ng-template #topPreviewTemplate let-file="file" let-fns="fns">
   <div class="gallery-top-preview">
+    <div>Some random things</div>
     <div>{{file.name}}</div>
-    <div (click)="fns.close()">X</div>
+    <div (click)="fns.close()"
+         class="pointer-cursor close-action">&times;</div>
   </div>
 </ng-template>
 
 <ng-template #bottomPreviewTemplate let-file>
-  <div class="gallery-bottom-preview">
+  <div class="gallery-bottom-preview pointer-cursor">
     <div (click)="downloadFile(file)">Download</div>
   </div>
+</ng-template>
+
+<ng-template #singleNav
+             let-fns="fns">
+  <button class="pointer-cursor custom-buttom"
+       (click)="fns.open()">Custom Open Action</button>
 </ng-template>

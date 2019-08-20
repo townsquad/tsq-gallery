@@ -1,10 +1,16 @@
 #app {
-  padding: 100px;
+  padding: 30px 100px 30px 100px;
+  font-family: Nunito, sans-serif;
+}
+
+.pointer-cursor {
+  cursor: pointer;
 }
 
 .gallery-item {
   width: 200px;
   height: 200px;
+  flex-shrink: 0;
   display: inline-block;
   position: relative;
 
@@ -24,14 +30,19 @@
   display: flex;
   justify-content: space-between;
 
-  > div:first-child {
-    color: greenyellow;
+  > div {
+    display: flex;
+    color: darkgreen;
     font-weight: bold;
+    font-size: 20px;
+  }
+  > div:not(:last-child) {
+    flex: 1;
   }
 
-  > div:last-child {
-    color: greenyellow;
-    font-weight: bold;
+  .close-action {
+    font-size: 30px;
+    margin-top: -10px;
   }
 }
 
@@ -42,7 +53,10 @@
   color: white;
 }
 
-.qwe {
-  background: yellow;
-  height: 1000px;
+.custom-buttom {
+  color: green;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: gray 0px 2px 2px;
+  margin-top: 10px;
 }

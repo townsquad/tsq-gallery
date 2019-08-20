@@ -1,17 +1,63 @@
 <div id="tsq-gallery-preview"
-     [ngStyle]="{display: isPreviewOpen ? 'flex' : 'none'}" (keyup)="onKeyUp($event)" tabindex="0">
+     #backdrop
+     [ngStyle]="{display: isPreviewOpen ? 'flex' : 'none'}"
+     (click)="backdropClickClose && !showLoading && close()"
+     (keyup)="onKeyUp($event)"
+     *ngIf="isPreviewOpen"
+     [@fadeInOut]
+     tabindex="0">
 
   <div class="preview-top" *ngIf="!!selectedFileToDisplay">
     <ng-container *ngTemplateOutlet="topPreviewTemplate; context: topPreviewContext"></ng-container>
+
+    <div class="preview-top-default"
+         *ngIf="!topPreviewTemplate">
+      <div>{{selectedFileToDisplay.name}}</div>
+      <div *ngIf="files.length > 1">{{selectedFileIndex +1}} / {{files.length}}</div>
+      <div>
+        <div (click)="$event.stopPropagation(); canZoomIn() && zoomIn()"
+             [class.disabled]="!canZoomIn()"
+             class="pointer-cursor action">&oplus;</div>
+        <div (click)="$event.stopPropagation(); canZoomOut() && zoomOut()"
+             [class.disabled]="!canZoomOut()"
+             class="pointer-cursor action">&#8854;</div>
+        <div (click)="$event.stopPropagation(); turnLeft()"
+             class="pointer-cursor action" style="font-size: 17px">&#8634;</div>
+        <div (click)="$event.stopPropagation(); turnRight()"
+             class="pointer-cursor action" style="font-size: 17px; transform: scaleX(-1);">&#8634;</div>
+        <div (click)="$event.stopPropagation(); close()"
+             class="pointer-cursor action" style="margin-top: -11px">&times;</div>
+      </div>
+    </div>
   </div>
 
   <ng-container *ngIf="!!files && !!selectedFileToDisplay">
-    <div class="preview-body">
-      <img [src]="selectedFileToDisplay.displayUrl" [alt]="selectedFileToDisplay.displayAlt">
+    <div class="preview-container">
+      <div class="preview-body"
+           [class.navigation]="displayNavigation">
+        <div *ngIf="displayNavigation" class="nav-action" [class.disabled]="!canGoBack()" (click)="$event.stopPropagation(); canGoBack() && goBack()">&lsaquo;</div>
+        <img [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+')'}"
+             [src]="selectedFileToDisplay.displayUrl"
+             [alt]="selectedFileToDisplay.displayAlt">
+        <div *ngIf="displayNavigation" class="nav-action" [class.disabled]="!canGoFoward()" (click)="$event.stopPropagation(); canGoFoward() && goFoward()">&rsaquo;</div>
+      </div>
     </div>
   </ng-container>
 
   <div class="preview-bottom" *ngIf="!!selectedFileToDisplay">
     <ng-container *ngTemplateOutlet="bottomPreviewTemplate; context: bottomPreviewContext"></ng-container>
+  </div>
+
+  <div *ngIf="showLoading" class="preview-loader">
+    <ng-container *ngTemplateOutlet="loadingTemplate"></ng-container>
+
+    <div *ngIf="!loadingTemplate"
+         id="default-loader"
+         class="lds-ring">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
   </div>
 </div>
