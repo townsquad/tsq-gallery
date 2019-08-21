@@ -4,7 +4,9 @@
 
   <h1>With custom actions and display</h1>
   <tsq-gallery [files]="files"
-               [fileDisplayTemplate]="fileDisplayTemplate"
+               [containerClass]="'gallery-item-custom'"
+               [imagePreviewTemplate]="imagePreviewTemplate"
+               [pdfPreviewTemplate]="pdfPreviewTemplate"
                [topPreviewTemplate]="topPreviewTemplate"
                [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
 
@@ -12,20 +14,36 @@
   <tsq-gallery [files]="files"
                [hasMiniPreviews]="false"
                [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
-
   <tsq-gallery [files]="files"
                [hasMiniPreviews]="false"
-               [fileDisplayTemplate]="singleNav"
+               [imagePreviewTemplate]="singleNav"
                [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
 
 </div>
 
-<ng-template #fileDisplayTemplate
-             let-index="index" let-url="url" let-alt="alt" let-fns="fns">
-  <div class="gallery-item pointer-cursor"
+<ng-template #imagePreviewTemplate
+             let-index="index" let-name="name" let-url="url" let-alt="alt" let-fns="fns">
+  <div class="image-preview-custom pointer-cursor"
        (click)="fns.open(index)"
-       [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
+       [ngStyle]="{'background-image': 'url(\'' + url + '\')'}">
+        {{name}}
+      </div>
 </ng-template>
+
+<ng-template #pdfPreviewTemplate
+             let-index="index" let-name="name" let-alt="alt" let-fns="fns">
+  <div class="pdf-preview-custom pointer-cursor"
+       (click)="fns.open(index)">
+        {{name}}
+      </div>
+</ng-template>
+
+<ng-template #singleNav
+             let-fns="fns">
+  <button class="pointer-cursor custom-buttom"
+       (click)="fns.open()">Custom Open Action</button>
+</ng-template>
+
 
 <ng-template #topPreviewTemplate let-file="file" let-fns="fns">
   <div class="gallery-top-preview">
@@ -40,10 +58,4 @@
   <div class="gallery-bottom-preview pointer-cursor">
     <div (click)="downloadFile(file)">Download</div>
   </div>
-</ng-template>
-
-<ng-template #singleNav
-             let-fns="fns">
-  <button class="pointer-cursor custom-buttom"
-       (click)="fns.open()">Custom Open Action</button>
 </ng-template>

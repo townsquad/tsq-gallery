@@ -37,8 +37,22 @@
            [class.navigation]="displayNavigation">
         <div *ngIf="displayNavigation" class="nav-action" [class.disabled]="!canGoBack()" (click)="$event.stopPropagation(); canGoBack() && goBack()">&lsaquo;</div>
         <img [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+')'}"
+             *ngIf="selectedFileToDisplay.type === 'image'"
+             draggable="false"
+             (mousedown)="dragDown($event)"
+             (mouseup)="dragUp($event)"
+             (mouvemove)="dragMove($event)"
              [src]="selectedFileToDisplay.displayUrl"
              [alt]="selectedFileToDisplay.displayAlt">
+
+        <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
+                    *ngIf="selectedFileToDisplay.type === 'pdf'"
+                    [rotation]="imageRotation"
+                    [zoom]="imageZoom"
+                    [render-text]="true"
+                    [fit-to-page]="true"
+                    [original-size]="false"
+                    [render-text]="true"></pdf-viewer>
         <div *ngIf="displayNavigation" class="nav-action" [class.disabled]="!canGoFoward()" (click)="$event.stopPropagation(); canGoFoward() && goFoward()">&rsaquo;</div>
       </div>
     </div>

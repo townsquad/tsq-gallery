@@ -114,6 +114,44 @@ export class TSqGalleryPreviewComponent {
     return this.imageZoom > 1;
   }
 
+
+
+  canDragOnZoom(): boolean {
+    return this.imageZoom > 1;
+  }
+
+  isMoving = false;
+
+  dragDown(e) {
+    if (this.canDragOnZoom()) {
+      e.stopPropagation();
+
+      console.log('down')
+
+      // this.initialX = this.getClientX(e);
+      // this.initialY = this.getClientY(e);
+      // this.initialLeft = this.positionLeft;
+      // this.initialTop = this.positionTop;
+      this.isMoving = true;
+    }
+  }
+
+  dragUp(e) {
+    e.stopPropagation();
+    console.log('up')
+    this.isMoving = false;
+  }
+
+  dragMove(e) {
+    if (this.isMoving) {
+      e.stopPropagation();
+
+      console.log('move')
+        // this.positionLeft = this.initialLeft + (this.getClientX(e) - this.initialX);
+        // this.positionTop = this.initialTop + (this.getClientY(e) - this.initialY);
+    }
+  }
+
   turnLeft() {
     this.imageRotation -= 90;
   }

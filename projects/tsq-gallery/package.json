@@ -4,5 +4,8 @@
   "peerDependencies": {
     "@angular/common": "^6.1.9",
     "@angular/core": "^6.1.9"
+  },
+  "dependencies": {
+    "ng2-pdf-viewer": "^5.3.3"
   }
 }

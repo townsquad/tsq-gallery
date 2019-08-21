@@ -1,27 +1,19 @@
-# TsqGallery
+# NgxTsqGallery
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.4.
+Angular file preview and carrousel viewer for images and pdfs.
 
-## Development server
+## Usage
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Install via `yarn tsq-gallery` or `npm install tsq-gallery`;
+Import to your app.modules.
 
-## Code scaffolding
+## Demo
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Install dependencies via `yarn` or `npm install`;
+Run locally at [localhost:4200](http://localhost:4200/) with `ng serve`
 
-## Build
+## Options
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+- **pdfPreviewTemplate** - change how the inner content of the preview for pdf files is displayed. This can be used if you want to hide the file preview, like adding a custom icon instead.
+- **containerClass** - Override container class. The class should have `::ng-deep` or be global to work. 
+- 

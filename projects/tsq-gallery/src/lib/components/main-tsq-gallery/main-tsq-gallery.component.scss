@@ -14,15 +14,13 @@
   }
 }
 
-.default-gallery-item {
+.default-gallery-item-container {
   width: 200px;
   height: 200px;
   display: inline-block;
   position: relative;
+  overflow: hidden;
 
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
   border: 1px solid whitesmoke;
   border-radius: 5px;
 
@@ -31,4 +29,21 @@
   &:not(:last-child) {
     margin-right: 8px;
   }
+}
+
+.default-gallery-item-content {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.pdf-container {
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  position: relative;
+  align-items: center;
+  vertical-align: middle
 }

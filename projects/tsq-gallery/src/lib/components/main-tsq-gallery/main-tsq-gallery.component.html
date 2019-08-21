@@ -1,11 +1,21 @@
 <div id="tsq-gallery">
   <div *ngIf="hasMiniPreviews" class="cards-container">
     <ng-container *ngFor="let file of files; let i = index">
-      <ng-container *ngTemplateOutlet="fileDisplayTemplate || defaultMiniPreviewDisplayTemplate; context: getListItemContext(file, i)"></ng-container>
+      <div [ngClass]="containerClass || 'default-gallery-item-container'">
+
+        <ng-container *ngIf="file.type === 'image'">
+          <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultImagePreviewTemplate; context: getListItemContext(file, i)"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="file.type === 'pdf'">
+          <ng-container *ngTemplateOutlet="pdfPreviewTemplate || defaultPdfPreviewTemplate; context: getListItemContext(file, i)"></ng-container>
+        </ng-container>
+
+      </div>
     </ng-container>
   </div>
   <ng-container *ngIf="!hasMiniPreviews">
-    <ng-container *ngTemplateOutlet="fileDisplayTemplate || defaultNavDisplayTemplate; context: getListItemContext()"></ng-container>
+    <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultNavDisplayTemplate; context: getListItemContext()"></ng-container>
   </ng-container>
 </div>
 
@@ -19,8 +29,22 @@
                      [displayNavigation]="displayNavigation"
                      [displayNavigationIndex]="displayNavigationIndex"></tsq-gallery-preview>
 
-<ng-template #defaultMiniPreviewDisplayTemplate let-index="index" let-url="url" let-alt="alt" let-fns="fns">
-  <div class="default-gallery-item" (click)="fns.open(index)" [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
+
+<ng-template #defaultImagePreviewTemplate let-index="index" let-type="type" let-url="url" let-alt="alt" let-fns="fns">
+  <div class="default-gallery-item-content"
+       (click)="fns.open(index)"
+       [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
+</ng-template>
+
+<ng-template #defaultPdfPreviewTemplate let-index="index" let-type="type" let-url="url" let-alt="alt" let-fns="fns">
+  <pdf-viewer class="pdf-container"
+              (click)="fns.open(index)"
+              [src]="url"
+              [show-all]="false"
+              [page]="1"
+              [fit-to-page]="true"
+              [original-size]="false"
+              [render-text]="false"></pdf-viewer>
 </ng-template>
 
 <ng-template #defaultNavDisplayTemplate let-fns="fns">

@@ -18,7 +18,9 @@ export class TSqGalleryComponent {
   @ViewChild(TSqGalleryPreviewComponent, {static: false}) preview: TSqGalleryPreviewComponent;
 
   @Input() files: TSqGalleryFileModel[];
-  @Input() fileDisplayTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
+  @Input() containerClass: string;
+  @Input() imagePreviewTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
+  @Input() pdfPreviewTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
   @Input() topPreviewTemplate: TemplateRef<TSqGalleryTopPreviewTemplateRefContext>;
   @Input() bottomPreviewTemplate: TemplateRef<TSqGalleryBottomPreviewTemplateRefContext>;
   @Input() loadingTemplate: TemplateRef<any>;
@@ -35,7 +37,9 @@ export class TSqGalleryComponent {
   getListItemContext(file: TSqGalleryFileModel, index: number): TSqGalleryListItemTemplateRefContext {
     return {
       index,
+      name: file && file.name,
       url: file && file.displayUrl,
+      type: file && file.type,
       alt: file && file.displayAlt,
       fns: {
         open: this.contextOpen,
