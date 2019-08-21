@@ -73,6 +73,10 @@
       transition: transform 250ms ease-in-out;
     }
 
+    .dragging {
+      transition: transform 0ms ease-in-out;
+    }
+
     &.navigation {
       justify-content: space-between;
 

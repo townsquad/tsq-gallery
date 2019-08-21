@@ -30,10 +30,18 @@ export class TSqGalleryViewerComponent {
   @Input() displayNavigation: boolean;
   @Input() displayNavigationIndex: boolean;
 
+  initialX = 0;
+  initialY = 0;
+  initialLeft = 0;
+  initialTop = 0;
+  positionLeft = 0;
+  positionTop = 0;
+
+  isMoving = false;
   imageRotation = 0;
   imageZoom = 1;
   selectedFileIndex: number;
-  @ViewChild('backdrop') backdropRef:ElementRef;
+  @ViewChild('backdrop', {static: false}) backdropRef:ElementRef;
 
   private isOpen: boolean;
 
@@ -64,6 +72,18 @@ export class TSqGalleryViewerComponent {
     return {
       $implicit: this.selectedFileToDisplay,
     };
+  }
+
+  resetPosition() {
+    this.isMoving = false;
+    this.imageZoom = 1;
+    this.imageRotation = 0;
+    this.initialX = 0;
+    this.initialY = 0;
+    this.initialLeft = 0;
+    this.initialTop = 0;
+    this.positionLeft = 0;
+    this.positionTop = 0;
   }
 
   open(index?: number) {
@@ -111,50 +131,37 @@ export class TSqGalleryViewerComponent {
   }
 
   canZoomOut(): boolean {
-    return this.imageZoom > 1;
+    return this.imageZoom > 0.5;
   }
-
-
-
-
-
-  canDragOnZoom(): boolean {
-    return this.imageZoom > 1;
-  }
-
-  isMoving = false;
 
   dragDown(e) {
-    if (this.canDragOnZoom()) {
-      e.stopPropagation();
-
-      console.log('down')
-
-      // this.initialX = this.getClientX(e);
-      // this.initialY = this.getClientY(e);
-      // this.initialLeft = this.positionLeft;
-      // this.initialTop = this.positionTop;
-      this.isMoving = true;
-    }
+    this.initialX = this.getClientX(e);
+    this.initialY = this.getClientY(e);
+    this.initialLeft = this.positionLeft;
+    this.initialTop = this.positionTop;
+    this.isMoving = true;
   }
 
   dragUp(e) {
-    e.stopPropagation();
-    console.log('up')
-    this.isMoving = false;
+    setTimeout(() => {
+      this.isMoving = false;
+    }, (20));
   }
 
   dragMove(e) {
     if (this.isMoving) {
-      e.stopPropagation();
-
-      console.log('move')
-        // this.positionLeft = this.initialLeft + (this.getClientX(e) - this.initialX);
-        // this.positionTop = this.initialTop + (this.getClientY(e) - this.initialY);
+      this.positionLeft = this.initialLeft + (this.getClientX(e) - this.initialX);
+      this.positionTop = this.initialTop + (this.getClientY(e) - this.initialY);
     }
   }
 
+  getClientX(e) {
+    return e.touches && e.touches.length ? e.touches[0].clientX : e.clientX;
+  }
 
+  getClientY(e) {
+    return e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
+  }
 
   turnLeft() {
     this.imageRotation -= 90;
@@ -165,6 +172,7 @@ export class TSqGalleryViewerComponent {
   }
 
   private goFoward() {
+    this.resetPosition();
     this.selectedFileIndex++;
   }
 
@@ -173,6 +181,7 @@ export class TSqGalleryViewerComponent {
   }
 
   private goBack() {
+    this.resetPosition();
     this.selectedFileIndex--;
   }
 

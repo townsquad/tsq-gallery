@@ -1,8 +1,9 @@
 <div id="tsq-gallery-viewer"
      #backdrop
-     [ngStyle]="{display: isViewerOpen ? 'flex' : 'none'}"
-     (click)="backdropClickClose && !showLoading && close()"
+     [ngStyle]="{'display': isViewerOpen ? 'flex' : 'none', 'cursor': isMoving? 'grabbing' : 'default'}"
      (keyup)="onKeyUp($event)"
+     (mouseup)="dragUp($event);"
+     (click)="backdropClickClose && !isMoving && !showLoading && close()"
      *ngIf="isViewerOpen"
      [@fadeInOut]
      tabindex="0">
@@ -37,22 +38,30 @@
            [class.navigation]="displayNavigation">
         <div *ngIf="displayNavigation" class="nav-action" [class.disabled]="!canGoBack()" (click)="$event.stopPropagation(); canGoBack() && goBack()">&lsaquo;</div>
 
-        <img [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+')'}"
+        <img [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : 'grab'}"
+             [class.dragging]="isMoving"
              *ngIf="selectedFileToDisplay.type === 'image'"
              draggable="false"
              (mousedown)="dragDown($event)"
-             (mouseup)="dragUp($event)"
-             (mouvemove)="dragMove($event)"
+             (mousemove)="dragMove($event)"
+             (touchmove)="dragMove($event)"
+             (click)="$event.stopPropagation();"
              [src]="selectedFileToDisplay.displayUrl"
              [alt]="selectedFileToDisplay.displayAlt">
 
         <div class="pdf-container"
-             [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+')'}"
+             [class.dragging]="isMoving"
+             draggable="false"
+             (mousedown)="dragDown($event)"
+             (mousemove)="dragMove($event)"
+             (touchmove)="dragMove($event)"
+             (click)="$event.stopPropagation();"
+             [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : 'grab'}"
              *ngIf="selectedFileToDisplay.type === 'pdf'">
           <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
                       [original-size]="false"
                       [autoresize]="true"
-                      [render-text]="true"></pdf-viewer>
+                      [render-text]="false"></pdf-viewer>
         </div>
 
         <div *ngIf="displayNavigation" class="nav-action" [class.disabled]="!canGoFoward()" (click)="$event.stopPropagation(); canGoFoward() && goFoward()">&rsaquo;</div>
