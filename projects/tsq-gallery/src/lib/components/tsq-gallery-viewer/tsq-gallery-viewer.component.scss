@@ -1,4 +1,4 @@
-#tsq-gallery-preview {
+#tsq-gallery-viewer {
   flex-direction: column;
 
   position: fixed;
@@ -12,12 +12,13 @@
   z-index: 1050;
   outline: 0;
 
-  .preview-top, .preview-bottom {
+  .viewer-top, .viewer-bottom {
     flex-shrink: 0;
     z-index: 200;
+    background-color: rgba(0, 0, 0, 0.25);
   }
 
-  .preview-top-default {
+  .viewer-top-default {
     padding: 16px;
     display: flex;
     justify-content: space-between;
@@ -27,6 +28,7 @@
       color: white;
       font-weight: bold;
       font-size: 14px;
+      height: 16px;
     }
     // > div:not(:last-child) {
     //   flex: 1;
@@ -35,7 +37,7 @@
     .action {
       font-size: 20px;
       cursor: pointer;
-      margin-top: -10px;
+      margin-top: -5px;
       user-select: none;
       margin-left: 10px;
 
@@ -46,17 +48,23 @@
     }
   }
 
-  .preview-container {
+  .viewer-container {
     flex-grow: 1;
     height: 100%;
     margin: 0 10px 10px 10px;
   }
 
-  .preview-body {
+  .viewer-body {
     height: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .pdf-container {
+      max-height: 100%;
+      transition: transform 250ms ease-in-out;
+    }
 
     img {
       max-width: 100%;
@@ -68,6 +76,7 @@
     &.navigation {
       justify-content: space-between;
 
+      .pdf-container,
       img {
         max-width: calc(100% - 50px);
       }
@@ -87,7 +96,7 @@
 }
 
 
-.preview-loader {
+.viewer-loader {
   width: 100vw;
   height: 100vh;
   position: absolute;

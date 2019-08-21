@@ -1,17 +1,17 @@
-<div id="tsq-gallery-preview"
+<div id="tsq-gallery-viewer"
      #backdrop
-     [ngStyle]="{display: isPreviewOpen ? 'flex' : 'none'}"
+     [ngStyle]="{display: isViewerOpen ? 'flex' : 'none'}"
      (click)="backdropClickClose && !showLoading && close()"
      (keyup)="onKeyUp($event)"
-     *ngIf="isPreviewOpen"
+     *ngIf="isViewerOpen"
      [@fadeInOut]
      tabindex="0">
 
-  <div class="preview-top" *ngIf="!!selectedFileToDisplay">
-    <ng-container *ngTemplateOutlet="topPreviewTemplate; context: topPreviewContext"></ng-container>
+  <div class="viewer-top" *ngIf="!!selectedFileToDisplay">
+    <ng-container *ngTemplateOutlet="topViewerTemplate; context: topViewerContext"></ng-container>
 
-    <div class="preview-top-default"
-         *ngIf="!topPreviewTemplate">
+    <div class="viewer-top-default"
+         *ngIf="!topViewerTemplate">
       <div>{{selectedFileToDisplay.name}}</div>
       <div *ngIf="files.length > 1">{{selectedFileIndex +1}} / {{files.length}}</div>
       <div>
@@ -26,16 +26,17 @@
         <div (click)="$event.stopPropagation(); turnRight()"
              class="pointer-cursor action" style="font-size: 17px; transform: scaleX(-1);">&#8634;</div>
         <div (click)="$event.stopPropagation(); close()"
-             class="pointer-cursor action" style="margin-top: -11px">&times;</div>
+             class="pointer-cursor action" style="margin-top: -7px; font-size: 22px;">&times;</div>
       </div>
     </div>
   </div>
 
   <ng-container *ngIf="!!files && !!selectedFileToDisplay">
-    <div class="preview-container">
-      <div class="preview-body"
+    <div class="viewer-container">
+      <div class="viewer-body"
            [class.navigation]="displayNavigation">
         <div *ngIf="displayNavigation" class="nav-action" [class.disabled]="!canGoBack()" (click)="$event.stopPropagation(); canGoBack() && goBack()">&lsaquo;</div>
+
         <img [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+')'}"
              *ngIf="selectedFileToDisplay.type === 'image'"
              draggable="false"
@@ -45,24 +46,25 @@
              [src]="selectedFileToDisplay.displayUrl"
              [alt]="selectedFileToDisplay.displayAlt">
 
-        <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
-                    *ngIf="selectedFileToDisplay.type === 'pdf'"
-                    [rotation]="imageRotation"
-                    [zoom]="imageZoom"
-                    [render-text]="true"
-                    [fit-to-page]="true"
-                    [original-size]="false"
-                    [render-text]="true"></pdf-viewer>
+        <div class="pdf-container"
+             [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+')'}"
+             *ngIf="selectedFileToDisplay.type === 'pdf'">
+          <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
+                      [original-size]="false"
+                      [autoresize]="true"
+                      [render-text]="true"></pdf-viewer>
+        </div>
+
         <div *ngIf="displayNavigation" class="nav-action" [class.disabled]="!canGoFoward()" (click)="$event.stopPropagation(); canGoFoward() && goFoward()">&rsaquo;</div>
       </div>
     </div>
   </ng-container>
 
-  <div class="preview-bottom" *ngIf="!!selectedFileToDisplay">
-    <ng-container *ngTemplateOutlet="bottomPreviewTemplate; context: bottomPreviewContext"></ng-container>
+  <div class="viewer-bottom" *ngIf="!!selectedFileToDisplay">
+    <ng-container *ngTemplateOutlet="bottomViewerTemplate; context: bottomViewerContext"></ng-container>
   </div>
 
-  <div *ngIf="showLoading" class="preview-loader">
+  <div *ngIf="showLoading" class="viewer-loader">
     <ng-container *ngTemplateOutlet="loadingTemplate"></ng-container>
 
     <div *ngIf="!loadingTemplate"

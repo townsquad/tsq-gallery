@@ -5,12 +5,12 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import {TSqGalleryComponent} from './components/main-tsq-gallery/main-tsq-gallery.component';
-import {TSqGalleryPreviewComponent} from './components/tsq-gallery-preview/tsq-gallery-preview.component';
+import {TSqGalleryViewerComponent} from './components/tsq-gallery-viewer/tsq-gallery-viewer.component';
 
 @NgModule({
   declarations: [
     TSqGalleryComponent,
-    TSqGalleryPreviewComponent,
+    TSqGalleryViewerComponent,
   ],
   imports: [
     CommonModule,

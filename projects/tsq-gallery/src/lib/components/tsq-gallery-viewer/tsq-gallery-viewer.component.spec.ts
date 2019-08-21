@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TSqGalleryPreviewComponent } from './tsq-gallery-preview.component';
+import { TSqGalleryViewerComponent } from './tsq-gallery-viewer.component';
 
-describe('TSqGalleryPreviewComponent', () => {
-  let component: TSqGalleryPreviewComponent;
-  let fixture: ComponentFixture<TSqGalleryPreviewComponent>;
+describe('TSqGalleryViewerComponent', () => {
+  let component: TSqGalleryViewerComponent;
+  let fixture: ComponentFixture<TSqGalleryViewerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TSqGalleryPreviewComponent ]
+      declarations: [ TSqGalleryViewerComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TSqGalleryPreviewComponent);
+    fixture = TestBed.createComponent(TSqGalleryViewerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

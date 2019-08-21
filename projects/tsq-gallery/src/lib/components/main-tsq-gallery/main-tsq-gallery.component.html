@@ -19,15 +19,15 @@
   </ng-container>
 </div>
 
-<tsq-gallery-preview #preview
+<tsq-gallery-viewer #viewer
                      [files]="files"
-                     [topPreviewTemplate]="topPreviewTemplate"
-                     [bottomPreviewTemplate]="bottomPreviewTemplate"
+                     [topViewerTemplate]="topViewerTemplate"
+                     [bottomViewerTemplate]="bottomViewerTemplate"
                      [loadingTemplate]="loadingTemplate"
                      [showLoading]="showLoading"
                      [backdropClickClose]="backdropClickClose"
                      [displayNavigation]="displayNavigation"
-                     [displayNavigationIndex]="displayNavigationIndex"></tsq-gallery-preview>
+                     [displayNavigationIndex]="displayNavigationIndex"></tsq-gallery-viewer>
 
 
 <ng-template #defaultImagePreviewTemplate let-index="index" let-type="type" let-url="url" let-alt="alt" let-fns="fns">

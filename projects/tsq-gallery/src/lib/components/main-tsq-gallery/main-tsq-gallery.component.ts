@@ -2,11 +2,11 @@ import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {
-  TSqGalleryBottomPreviewTemplateRefContext,
+  TSqGallerybottomViewerTemplateRefContext,
   TSqGalleryListItemTemplateRefContext,
-  TSqGalleryTopPreviewTemplateRefContext
+  TSqGallerytopViewerTemplateRefContext
 } from '../../models/tsq-gallery-template-ref-context.model';
-import {TSqGalleryPreviewComponent} from '../tsq-gallery-preview/tsq-gallery-preview.component';
+import {TSqGalleryViewerComponent} from '../tsq-gallery-viewer/tsq-gallery-viewer.component';
 
 @Component({
   selector: 'tsq-gallery',
@@ -15,14 +15,14 @@ import {TSqGalleryPreviewComponent} from '../tsq-gallery-preview/tsq-gallery-pre
 })
 export class TSqGalleryComponent {
 
-  @ViewChild(TSqGalleryPreviewComponent, {static: false}) preview: TSqGalleryPreviewComponent;
+  @ViewChild(TSqGalleryViewerComponent, {static: false}) viewer: TSqGalleryViewerComponent;
 
   @Input() files: TSqGalleryFileModel[];
   @Input() containerClass: string;
   @Input() imagePreviewTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
   @Input() pdfPreviewTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
-  @Input() topPreviewTemplate: TemplateRef<TSqGalleryTopPreviewTemplateRefContext>;
-  @Input() bottomPreviewTemplate: TemplateRef<TSqGalleryBottomPreviewTemplateRefContext>;
+  @Input() topViewerTemplate: TemplateRef<TSqGallerytopViewerTemplateRefContext>;
+  @Input() bottomViewerTemplate: TemplateRef<TSqGallerybottomViewerTemplateRefContext>;
   @Input() loadingTemplate: TemplateRef<any>;
   @Input() showLoading = false;
   @Input() hasMiniPreviews = true;
@@ -31,7 +31,7 @@ export class TSqGalleryComponent {
   @Input() displayNavigationIndex = true;
 
   contextOpen = (index?: number) => {
-    this.preview.open(index);
+    this.viewer.open(index);
   }
 
   getListItemContext(file: TSqGalleryFileModel, index: number): TSqGalleryListItemTemplateRefContext {

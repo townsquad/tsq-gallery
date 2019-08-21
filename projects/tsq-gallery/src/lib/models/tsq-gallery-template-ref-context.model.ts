@@ -9,12 +9,12 @@ export interface TSqGalleryListItemTemplateRefContext {
   fns?: {[key: string]: () => any};
 }
 
-export interface TSqGalleryTopPreviewTemplateRefContext {
+export interface TSqGallerytopViewerTemplateRefContext {
   file: TSqGalleryFileModel;
   fns?: {[key: string]: () => any};
 }
 
-export interface TSqGalleryBottomPreviewTemplateRefContext {
+export interface TSqGallerybottomViewerTemplateRefContext {
   $implicit: TSqGalleryFileModel;
   fns?: {[key: string]: () => any};
 }

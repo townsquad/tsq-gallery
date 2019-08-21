@@ -3,8 +3,8 @@ import {Component, Input, Renderer2, TemplateRef, ElementRef, ViewChild} from '@
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {galleryAnimations} from '../../utils/gallery.animations';
 import {
-  TSqGalleryBottomPreviewTemplateRefContext,
-  TSqGalleryTopPreviewTemplateRefContext
+  TSqGallerybottomViewerTemplateRefContext,
+  TSqGallerytopViewerTemplateRefContext
 } from '../../models/tsq-gallery-template-ref-context.model';
 
 enum SupportedKeys {
@@ -14,16 +14,16 @@ enum SupportedKeys {
 }
 
 @Component({
-  selector: 'tsq-gallery-preview',
-  templateUrl: 'tsq-gallery-preview.component.html',
-  styleUrls: ['tsq-gallery-preview.component.scss'],
+  selector: 'tsq-gallery-viewer',
+  templateUrl: 'tsq-gallery-viewer.component.html',
+  styleUrls: ['tsq-gallery-viewer.component.scss'],
   animations: [galleryAnimations],
 })
-export class TSqGalleryPreviewComponent {
+export class TSqGalleryViewerComponent {
 
   @Input() files: TSqGalleryFileModel[];
-  @Input() topPreviewTemplate: TemplateRef<TSqGalleryTopPreviewTemplateRefContext>;
-  @Input() bottomPreviewTemplate: TemplateRef<any>;
+  @Input() topViewerTemplate: TemplateRef<TSqGallerytopViewerTemplateRefContext>;
+  @Input() bottomViewerTemplate: TemplateRef<any>;
   @Input() loadingTemplate: TemplateRef<any>;
   @Input() showLoading: boolean;
   @Input() backdropClickClose: boolean;
@@ -43,7 +43,7 @@ export class TSqGalleryPreviewComponent {
     this.close();
   }
 
-  get isPreviewOpen(): boolean {
+  get isViewerOpen(): boolean {
     return this.isOpen;
   }
 
@@ -51,7 +51,7 @@ export class TSqGalleryPreviewComponent {
     return this.files && this.files[!!this.selectedFileIndex || this.selectedFileIndex === 0 ? this.selectedFileIndex : 0];
   }
 
-  get topPreviewContext(): TSqGalleryTopPreviewTemplateRefContext {
+  get topViewerContext(): TSqGallerytopViewerTemplateRefContext {
     return {
       file: this.selectedFileToDisplay,
       fns: {
@@ -60,7 +60,7 @@ export class TSqGalleryPreviewComponent {
     };
   }
 
-  get bottomPreviewContext(): TSqGalleryBottomPreviewTemplateRefContext {
+  get bottomViewerContext(): TSqGallerybottomViewerTemplateRefContext {
     return {
       $implicit: this.selectedFileToDisplay,
     };
@@ -116,6 +116,8 @@ export class TSqGalleryPreviewComponent {
 
 
 
+
+
   canDragOnZoom(): boolean {
     return this.imageZoom > 1;
   }
@@ -151,6 +153,8 @@ export class TSqGalleryPreviewComponent {
         // this.positionTop = this.initialTop + (this.getClientY(e) - this.initialY);
     }
   }
+
+
 
   turnLeft() {
     this.imageRotation -= 90;

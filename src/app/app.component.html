@@ -7,17 +7,17 @@
                [containerClass]="'gallery-item-custom'"
                [imagePreviewTemplate]="imagePreviewTemplate"
                [pdfPreviewTemplate]="pdfPreviewTemplate"
-               [topPreviewTemplate]="topPreviewTemplate"
-               [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
+               [topViewerTemplate]="topViewerTemplate"
+               [bottomViewerTemplate]="bottomViewerTemplate"></tsq-gallery>
 
   <h1>Without preview</h1>
   <tsq-gallery [files]="files"
                [hasMiniPreviews]="false"
-               [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
+               [bottomViewerTemplate]="bottomViewerTemplate"></tsq-gallery>
   <tsq-gallery [files]="files"
                [hasMiniPreviews]="false"
                [imagePreviewTemplate]="singleNav"
-               [bottomPreviewTemplate]="bottomPreviewTemplate"></tsq-gallery>
+               [bottomViewerTemplate]="bottomViewerTemplate"></tsq-gallery>
 
 </div>
 
@@ -45,8 +45,8 @@
 </ng-template>
 
 
-<ng-template #topPreviewTemplate let-file="file" let-fns="fns">
-  <div class="gallery-top-preview">
+<ng-template #topViewerTemplate let-file="file" let-fns="fns">
+  <div class="gallery-top-viewer">
     <div>Some random things</div>
     <div>{{file.name}}</div>
     <div (click)="fns.close()"
@@ -54,8 +54,8 @@
   </div>
 </ng-template>
 
-<ng-template #bottomPreviewTemplate let-file>
-  <div class="gallery-bottom-preview pointer-cursor">
+<ng-template #bottomViewerTemplate let-file>
+  <div class="gallery-bottom-viewer pointer-cursor">
     <div (click)="downloadFile(file)">Download</div>
   </div>
 </ng-template>
