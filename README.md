@@ -25,8 +25,8 @@ preview, like adding a custom icon instead.
 - **backdropClickClose** - 
 - **displayNavigation** - display navigation actions at side of the contents.
 - **displayNavigationIndex** - show page count at the top.
-- **topViewerTemplate** - 
-- **bottomViewerTemplate** - 
+- **topViewerTemplate** - override the default top section of the viewer.
+- **bottomViewerTemplate** - override the default bottom section of the viewer.
 
 
 
