@@ -3,6 +3,7 @@
      [ngStyle]="{'display': isViewerOpen ? 'flex' : 'none', 'cursor': isMoving? 'grabbing' : 'default'}"
      (keyup)="onKeyUp($event)"
      (mouseup)="dragUp($event);"
+     (mouseleave)="dragUp($event);"
      (click)="backdropClickClose && !isMoving && !showLoading && close()"
      *ngIf="isViewerOpen"
      [@fadeInOut]
