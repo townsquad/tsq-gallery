@@ -10,11 +10,13 @@ export interface TSqGalleryListItemTemplateRefContext {
 }
 
 export interface TSqGallerytopViewerTemplateRefContext {
+  index: number;
   file: TSqGalleryFileModel;
   fns?: {[key: string]: () => any};
 }
 
 export interface TSqGallerybottomViewerTemplateRefContext {
-  $implicit: TSqGalleryFileModel;
+  index: number;
+  file: TSqGalleryFileModel;
   fns?: {[key: string]: () => any};
 }

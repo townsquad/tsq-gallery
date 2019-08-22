@@ -29,6 +29,10 @@ export class AppComponent {
     {name: 'file_01.pdf', type: 'pdf', displayUrl: './assets/pdfs/01.pdf', downloadUrl: 'https://cdn.vox-cdn.com/thumbor/GNXFfWIVnp-51ld-aYdKv-JzxRI=/0x0:637x355/1820x1213/filters:focal(269x128:369x228):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/51105501/adventuretime.0.png'},
   ];
 
+  removeFromList(removeIndex: number) {
+    this.files = this.files.filter((file, index) => index !== removeIndex);
+  }
+
   downloadFile(file: TSqGalleryFileModel) {
     window.open(file.downloadUrl, '_blank');
   }

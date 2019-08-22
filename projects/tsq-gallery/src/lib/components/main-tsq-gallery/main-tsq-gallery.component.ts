@@ -19,6 +19,7 @@ export class TSqGalleryComponent {
 
   @Input() files: TSqGalleryFileModel[];
   @Input() containerClass: string;
+  @Input() topViewerClass: string;
   @Input() imagePreviewTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
   @Input() pdfPreviewTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
   @Input() topViewerTemplate: TemplateRef<TSqGallerytopViewerTemplateRefContext>;

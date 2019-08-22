@@ -21,7 +21,20 @@ enum SupportedKeys {
 })
 export class TSqGalleryViewerComponent {
 
-  @Input() files: TSqGalleryFileModel[];
+  @Input()
+  set files(files: TSqGalleryFileModel[]) {
+    if (files.length === 0) {
+      this.close();
+    }
+    if (this.selectedFileIndex > files.length - 1) {
+      this.selectedFileIndex = files.length - 1;
+    }
+
+    this.readFiles = files;
+  }
+  get files() { return this.readFiles; }
+
+  @Input() topViewerClass: string;
   @Input() topViewerTemplate: TemplateRef<TSqGallerytopViewerTemplateRefContext>;
   @Input() bottomViewerTemplate: TemplateRef<any>;
   @Input() loadingTemplate: TemplateRef<any>;
@@ -41,8 +54,9 @@ export class TSqGalleryViewerComponent {
   imageRotation = 0;
   imageZoom = 1;
   selectedFileIndex: number;
-  @ViewChild('backdrop', {static: false}) backdropRef:ElementRef;
+  @ViewChild('backdrop', {static: false}) backdropRef: ElementRef;
 
+  private readFiles: TSqGalleryFileModel[];
   private isOpen: boolean;
 
   constructor(private renderer: Renderer2) { }
@@ -56,12 +70,15 @@ export class TSqGalleryViewerComponent {
   }
 
   get selectedFileToDisplay(): TSqGalleryFileModel {
-    return this.files && this.files[!!this.selectedFileIndex || this.selectedFileIndex === 0 ? this.selectedFileIndex : 0];
+    const file = this.files && this.files[!!this.selectedFileIndex || this.selectedFileIndex === 0 ? this.selectedFileIndex : 0];
+
+    return file;
   }
 
   get topViewerContext(): TSqGallerytopViewerTemplateRefContext {
     return {
       file: this.selectedFileToDisplay,
+      index: this.selectedFileIndex,
       fns: {
         close: this.contextClose,
       },
@@ -70,20 +87,24 @@ export class TSqGalleryViewerComponent {
 
   get bottomViewerContext(): TSqGallerybottomViewerTemplateRefContext {
     return {
-      $implicit: this.selectedFileToDisplay,
+      file: this.selectedFileToDisplay,
+      index: this.selectedFileIndex,
     };
   }
 
-  resetPosition() {
+  resetPosition(resetRotation: boolean = true) {
     this.isMoving = false;
     this.imageZoom = 1;
-    this.imageRotation = 0;
     this.initialX = 0;
     this.initialY = 0;
     this.initialLeft = 0;
     this.initialTop = 0;
     this.positionLeft = 0;
     this.positionTop = 0;
+
+    if (resetRotation) {
+      this.imageRotation = 0;
+    }
   }
 
   open(index?: number) {
@@ -94,8 +115,7 @@ export class TSqGalleryViewerComponent {
   }
 
   close() {
-    this.imageRotation = 0;
-    this.imageZoom = 1;
+    this.resetPosition();
 
     this.isOpen = false;
     this.selectedFileIndex = undefined;
@@ -150,8 +170,32 @@ export class TSqGalleryViewerComponent {
 
   dragMove(e) {
     if (this.isMoving) {
-      this.positionLeft = this.initialLeft + (this.getClientX(e) - this.initialX);
-      this.positionTop = this.initialTop + (this.getClientY(e) - this.initialY);
+      switch (this.imageRotation % 360) {
+        case 0:
+        case -360: {
+          this.positionLeft = this.initialLeft + (this.getClientX(e) - this.initialX);
+          this.positionTop = this.initialTop + (this.getClientY(e) - this.initialY);
+          break;
+        }
+        case 90:
+        case -270: {
+          this.positionLeft = this.initialLeft + (this.getClientY(e) - this.initialY);
+          this.positionTop = this.initialTop + (-this.getClientX(e) + this.initialX);
+          break;
+        }
+        case 180:
+        case -180: {
+          this.positionLeft = this.initialLeft + (-this.getClientX(e) + this.initialX);
+          this.positionTop = this.initialTop + (-this.getClientY(e) + this.initialY);
+          break;
+        }
+        case 270:
+        case -90: {
+          this.positionLeft = this.initialLeft + (-this.getClientY(e) + this.initialY);
+          this.positionTop = this.initialTop + (this.getClientX(e) - this.initialX);
+          break;
+        }
+      }
     }
   }
 

@@ -11,7 +11,7 @@
   <div class="viewer-top" *ngIf="!!selectedFileToDisplay">
     <ng-container *ngTemplateOutlet="topViewerTemplate; context: topViewerContext"></ng-container>
 
-    <div class="viewer-top-default"
+    <div [ngClass]="topViewerClass || 'viewer-top-default'"
          *ngIf="!topViewerTemplate">
       <div>{{selectedFileToDisplay.name}}</div>
       <div *ngIf="files.length > 1">{{selectedFileIndex +1}} / {{files.length}}</div>

@@ -54,8 +54,9 @@
   </div>
 </ng-template>
 
-<ng-template #bottomViewerTemplate let-file>
+<ng-template #bottomViewerTemplate let-file="file" let-index="index">
   <div class="gallery-bottom-viewer pointer-cursor">
-    <div (click)="downloadFile(file)">Download</div>
+    <div (click)="$event.stopPropagation(); downloadFile(file)">Download</div>
+    <div (click)="$event.stopPropagation(); removeFromList(index)">Delete</div>
   </div>
 </ng-template>
