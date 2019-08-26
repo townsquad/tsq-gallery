@@ -98,7 +98,7 @@ export class TSqGalleryViewerComponent {
   }
 
   resetPosition(resetRotation: boolean = true) {
-    this.isMoving = false;
+    this.isMoving = true;
     this.imageZoom = 1;
     this.initialX = 0;
     this.initialY = 0;
@@ -110,13 +110,15 @@ export class TSqGalleryViewerComponent {
     if (resetRotation) {
       this.imageRotation = 0;
     }
+
+    setTimeout(() => { this.isMoving = false; }, 10);
   }
 
   open(index?: number) {
     this.isOpen = true;
     this.selectedFileIndex = index || 0;
     this.renderer.setStyle(document.body, 'overflow', 'hidden');
-    setTimeout(() => this.backdropRef.nativeElement.focus(), 50);
+    setTimeout(() => this.backdropRef.nativeElement.focus(), 10);
   }
 
   close() {
@@ -244,7 +246,7 @@ export class TSqGalleryViewerComponent {
   dragUp(e) {
     setTimeout(() => {
       this.isMoving = false;
-    }, (20));
+    }, (10));
   }
 
   dragMove(e) {
