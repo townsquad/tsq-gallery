@@ -45,6 +45,8 @@ export class TSqGalleryComponent {
   @Input() displayNavigation = true;
   /** Toggle display the image index count at the top of the Viewer. */
   @Input() displayNavigationIndex = true;
+  /** Toogle display the option to download files on the Viewer.  */
+  @Input() allowDownload = true;
 
   /** Open preview for file of Index. */
   contextOpen = (index?: number) => {

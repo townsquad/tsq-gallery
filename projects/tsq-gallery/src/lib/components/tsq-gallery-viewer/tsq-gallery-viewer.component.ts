@@ -10,7 +10,11 @@ import {
 enum SupportedKeys {
   ArrowRight = 'ArrowRight',
   ArrowLeft = 'ArrowLeft',
+  ArrowUp = 'ArrowUp',
+  ArrowDown = 'ArrowDown',
   Esc = 'Escape',
+  Minus = '-',
+  Plus = '+',
 }
 
 @Component({
@@ -42,6 +46,7 @@ export class TSqGalleryViewerComponent {
   @Input() backdropClickClose: boolean;
   @Input() displayNavigation: boolean;
   @Input() displayNavigationIndex: boolean;
+  @Input() allowDownload: boolean;
 
   initialX = 0;
   initialY = 0;
@@ -124,13 +129,87 @@ export class TSqGalleryViewerComponent {
 
   onKeyUp(keyboardEvent: KeyboardEvent) {
     const key = keyboardEvent.key;
-    if (!this.showLoading && !!this.files) {
-      if (this.isArrowRight(keyboardEvent.key) && this.canGoFoward()) {
-        this.goFoward();
-      } else if (this.isArrowLeft(key) && this.canGoBack()) {
-        this.goBack();
-      } else if (this.isEsc(key)) {
-        this.close();
+
+    switch (key) {
+      case SupportedKeys.ArrowLeft: {
+        if (this.canGoBack()) {
+          this.goBack();
+        }
+        break;
+      }
+      case SupportedKeys.ArrowRight: {
+        if (this.canGoFoward()) {
+          this.goFoward();
+        }
+        break;
+      }
+      case SupportedKeys.Esc: {
+        if (!this.showLoading) {
+          this.close();
+        }
+        break;
+      }
+      case SupportedKeys.ArrowDown : {
+        switch (this.imageRotation % 360) {
+          case 0:
+          case -360: {
+            this.positionTop -= 40;
+            break;
+          }
+          case 90:
+          case -270: {
+            this.positionLeft -= 40;
+            break;
+          }
+          case 180:
+          case -180: {
+            this.positionTop += 40;
+            break;
+          }
+          case 270:
+          case -90: {
+            this.positionLeft += 40;
+            break;
+          }
+        }
+        break;
+      }
+      case SupportedKeys.ArrowUp : {
+        switch (this.imageRotation % 360) {
+          case 0:
+          case -360: {
+            this.positionTop += 40;
+            break;
+          }
+          case 90:
+          case -270: {
+            this.positionLeft += 40;
+            break;
+          }
+          case 180:
+          case -180: {
+            this.positionTop -= 40;
+            break;
+          }
+          case 270:
+          case -90: {
+            this.positionLeft -= 40;
+            break;
+          }
+        }
+        break;
+      }
+      case SupportedKeys.Minus : {
+        if (this.canZoomOut) {
+          this.zoomOut();
+        }
+        break;
+      }
+      case SupportedKeys.Plus : {
+        if (this.canZoomIn) {
+          this.zoomIn();
+        }
+        break;
       }
     }
   }
@@ -215,6 +294,11 @@ export class TSqGalleryViewerComponent {
     this.imageRotation += 90;
   }
 
+  downloadFile() {
+    const file = this.selectedFileToDisplay;
+    window.open(file.downloadUrl, '_blank');
+  }
+
   private goFoward() {
     this.resetPosition();
     this.selectedFileIndex++;
@@ -231,17 +315,5 @@ export class TSqGalleryViewerComponent {
 
   private canGoBack(): boolean {
     return this.selectedFileIndex > 0;
-  }
-
-  private isArrowLeft(key: string): boolean {
-    return key === SupportedKeys.ArrowLeft;
-  }
-
-  private isArrowRight(key: string): boolean {
-    return key === SupportedKeys.ArrowRight;
-  }
-
-  private isEsc(key: string): boolean {
-    return key === SupportedKeys.Esc;
   }
 }

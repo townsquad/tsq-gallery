@@ -31,3 +31,4 @@ Run locally at [localhost:4200](http://localhost:4200/) with `ng serve`
 - **topViewerTemplate** - Override the inner content of the top of the Viewer. Check `TSqGallerytopViewerTemplateRefContext` for variables access.
 - **bottomViewerTemplate** - Add content at the bottom of the Viewer. Check `TSqGallerybottomViewerTemplateRefContext` for variables access.
 - **loadingTemplate** - Override the loader shown at the Viewer.
+- **allowDownload** - Toogle display the option to download files on the Viewer.

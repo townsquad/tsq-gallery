@@ -21,18 +21,28 @@
   .viewer-top-default {
     padding: 16px;
     display: flex;
-    justify-content: space-between;
+    // justify-content: center;
 
     > div {
+      flex: 1;
       display: flex;
+      justify-content: center;
+
       color: white;
       font-weight: bold;
       font-size: 14px;
       height: 16px;
+
+      align-items: center;
     }
-    // > div:not(:last-child) {
-    //   flex: 1;
-    // }
+    > div:first-child {
+      justify-content: flex-start;
+      margin-right: auto;
+    }
+    > div:last-child {
+      justify-content: flex-end;
+      margin-left: auto;
+    }
 
     .action {
       font-size: 20px;
