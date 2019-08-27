@@ -55,6 +55,7 @@ export class TSqGalleryViewerComponent {
   positionLeft = 0;
   positionTop = 0;
 
+  keypress = false;
   isMoving = false;
   imageRotation = 0;
   imageZoom = 1;
@@ -132,83 +133,89 @@ export class TSqGalleryViewerComponent {
   onKeyUp(keyboardEvent: KeyboardEvent) {
     const key = keyboardEvent.key;
 
-    switch (key) {
-      case SupportedKeys.ArrowLeft: {
-        this.goBack();
-        break;
-      }
-      case SupportedKeys.ArrowRight: {
-        this.goFoward();
-        break;
-      }
-      case SupportedKeys.Esc: {
-        if (!this.showLoading) {
-          this.close();
+    if (!this.keypress) {
+      this.keypress = true;
+
+      switch (key) {
+        case SupportedKeys.ArrowLeft: {
+          this.goBack();
+          break;
         }
-        break;
-      }
-      case SupportedKeys.ArrowDown : {
-        switch (this.imageRotation % 360) {
-          case 0:
-          case -360: {
-            this.positionTop -= 40;
-            break;
-          }
-          case 90:
-          case -270: {
-            this.positionLeft -= 40;
-            break;
-          }
-          case 180:
-          case -180: {
-            this.positionTop += 40;
-            break;
-          }
-          case 270:
-          case -90: {
-            this.positionLeft += 40;
-            break;
-          }
+        case SupportedKeys.ArrowRight: {
+          this.goFoward();
+          break;
         }
-        break;
-      }
-      case SupportedKeys.ArrowUp : {
-        switch (this.imageRotation % 360) {
-          case 0:
-          case -360: {
-            this.positionTop += 40;
-            break;
+        case SupportedKeys.Esc: {
+          if (!this.showLoading) {
+            this.close();
           }
-          case 90:
-          case -270: {
-            this.positionLeft += 40;
-            break;
-          }
-          case 180:
-          case -180: {
-            this.positionTop -= 40;
-            break;
-          }
-          case 270:
-          case -90: {
-            this.positionLeft -= 40;
-            break;
-          }
+          break;
         }
-        break;
-      }
-      case SupportedKeys.Minus : {
-        if (this.canZoomOut) {
-          this.zoomOut();
+        case SupportedKeys.ArrowDown : {
+          switch (this.imageRotation % 360) {
+            case 0:
+            case -360: {
+              this.positionTop -= 40;
+              break;
+            }
+            case 90:
+            case -270: {
+              this.positionLeft -= 40;
+              break;
+            }
+            case 180:
+            case -180: {
+              this.positionTop += 40;
+              break;
+            }
+            case 270:
+            case -90: {
+              this.positionLeft += 40;
+              break;
+            }
+          }
+          break;
         }
-        break;
-      }
-      case SupportedKeys.Plus : {
-        if (this.canZoomIn) {
-          this.zoomIn();
+        case SupportedKeys.ArrowUp : {
+          switch (this.imageRotation % 360) {
+            case 0:
+            case -360: {
+              this.positionTop += 40;
+              break;
+            }
+            case 90:
+            case -270: {
+              this.positionLeft += 40;
+              break;
+            }
+            case 180:
+            case -180: {
+              this.positionTop -= 40;
+              break;
+            }
+            case 270:
+            case -90: {
+              this.positionLeft -= 40;
+              break;
+            }
+          }
+          break;
         }
-        break;
+        case SupportedKeys.Minus : {
+          if (this.canZoomOut) {
+            this.zoomOut();
+          }
+          break;
+        }
+        case SupportedKeys.Plus : {
+          if (this.canZoomIn) {
+            this.zoomIn();
+          }
+          break;
+        }
       }
+
+      setTimeout(() => { this.keypress = false; }, 150);
     }
   }
 
