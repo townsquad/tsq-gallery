@@ -1,4 +1,4 @@
-# NgxTsqGallery
+# TSqGallery
 
 Angular file preview and carrousel viewer for images and pdfs.
 
@@ -23,7 +23,7 @@ Run locally at [localhost:4200](http://localhost:4200/) with `ng serve`
 - **containerClass** - Override the class of the container for each file of the Preview. The class should either have `::ng-deep` (not recommended) or be global.
 - **imagePreviewTemplate** - Override the inner content for image type files on the Preview. Check `TSqGalleryListItemTemplateRefContext` for variables access.
 - **pdfPreviewTemplate** - Override the inner content for pdf type files on the Preview. This can be used if you want to hide the file. Check `TSqGalleryListItemTemplateRefContext` for variables access.
-- **hasMiniPreviews** - Toggle display the Preview or a single access action buttom. Override `imagePreviewTemplate` to edit it in case of `false`.
+- **hasMiniPreviews** - Toggle display the Preview or a single access action button. Override `imagePreviewTemplate` to edit it in case of `false`.
 - **backdropClickClose** - Toggle action of closing the backdrop of the Viewer.
 - **displayNavigation** - Toggle the navigation actions buttons at the Viewer.
 - **displayNavigationIndex** - Toggle display the image index count at the top of the Viewer.

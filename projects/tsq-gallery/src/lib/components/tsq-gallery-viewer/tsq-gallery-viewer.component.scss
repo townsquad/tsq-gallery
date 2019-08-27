@@ -21,7 +21,6 @@
   .viewer-top-default {
     padding: 16px;
     display: flex;
-    // justify-content: center;
 
     > div {
       flex: 1;
@@ -54,6 +53,22 @@
       &.disabled {
         cursor: default;
         color: gray;
+      }
+
+      &.download-icon {
+        margin-top: -1px;
+        font-size: 13px;
+      }
+      &.close-icon {
+        margin-top: -7px;
+        font-size: 22px;
+      }
+      &.turn-right-icon {
+        font-size: 17px;
+        transform: scaleX(-1);
+      }
+      &.turn-left-icon {
+        font-size: 17px;
       }
     }
   }

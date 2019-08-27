@@ -134,15 +134,11 @@ export class TSqGalleryViewerComponent {
 
     switch (key) {
       case SupportedKeys.ArrowLeft: {
-        if (this.canGoBack()) {
-          this.goBack();
-        }
+        this.goBack();
         break;
       }
       case SupportedKeys.ArrowRight: {
-        if (this.canGoFoward()) {
-          this.goFoward();
-        }
+        this.goFoward();
         break;
       }
       case SupportedKeys.Esc: {
@@ -217,25 +213,26 @@ export class TSqGalleryViewerComponent {
   }
 
   zoomIn() {
-    if (this.canZoomIn()) {
+    if (this.canZoomIn) {
       this.imageZoom += 0.1;
     }
   }
-  canZoomIn(): boolean {
+
+  get canZoomIn(): boolean {
     return this.imageZoom < 2;
   }
 
   zoomOut() {
-    if (this.canZoomOut()) {
+    if (this.canZoomOut) {
       this.imageZoom -= 0.1;
     }
   }
 
-  canZoomOut(): boolean {
+  get canZoomOut(): boolean {
     return this.imageZoom > 0.5;
   }
 
-  dragDown(e) {
+  dragDown(e: TouchEvent | MouseEvent) {
     this.initialX = this.getClientX(e);
     this.initialY = this.getClientY(e);
     this.initialLeft = this.positionLeft;
@@ -243,13 +240,13 @@ export class TSqGalleryViewerComponent {
     this.isMoving = true;
   }
 
-  dragUp(e) {
+  dragUp() {
     setTimeout(() => {
       this.isMoving = false;
     }, (10));
   }
 
-  dragMove(e) {
+  dragMove(e: TouchEvent | MouseEvent) {
     if (this.isMoving) {
       switch (this.imageRotation % 360) {
         case 0:
@@ -280,12 +277,16 @@ export class TSqGalleryViewerComponent {
     }
   }
 
-  getClientX(e) {
-    return e.touches && e.touches.length ? e.touches[0].clientX : e.clientX;
+  getClientX(e: TouchEvent | MouseEvent): number {
+    return e instanceof TouchEvent ?
+      e.touches[0].clientX :
+      e.clientX;
   }
 
-  getClientY(e) {
-    return e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
+  getClientY(e: TouchEvent | MouseEvent): number {
+    return e instanceof TouchEvent ?
+      e.touches[0].clientY :
+      e.clientY;
   }
 
   turnLeft() {
@@ -302,20 +303,24 @@ export class TSqGalleryViewerComponent {
   }
 
   private goFoward() {
-    this.resetPosition();
-    this.selectedFileIndex++;
+    if (this.canGoFoward) {
+      this.resetPosition();
+      this.selectedFileIndex++;
+    }
   }
 
-  private canGoFoward(): boolean {
+  get canGoFoward(): boolean {
     return this.selectedFileIndex < this.files.length - 1;
   }
 
   private goBack() {
-    this.resetPosition();
-    this.selectedFileIndex--;
+    if (this.canGoBack) {
+      this.resetPosition();
+      this.selectedFileIndex--;
+    }
   }
 
-  private canGoBack(): boolean {
+  get canGoBack(): boolean {
     return this.selectedFileIndex > 0;
   }
 }
