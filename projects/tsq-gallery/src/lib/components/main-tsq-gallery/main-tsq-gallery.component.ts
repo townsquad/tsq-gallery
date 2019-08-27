@@ -2,9 +2,9 @@ import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {
-  TSqGallerybottomViewerTemplateRefContext,
+  TSqGalleryBottomViewerTemplateRefContext,
   TSqGalleryListItemTemplateRefContext,
-  TSqGallerytopViewerTemplateRefContext
+  TSqGalleryTopViewerTemplateRefContext
 } from '../../models/tsq-gallery-template-ref-context.model';
 import {TSqGalleryViewerComponent} from '../tsq-gallery-viewer/tsq-gallery-viewer.component';
 
@@ -36,11 +36,11 @@ export class TSqGalleryComponent {
    */
   @Input() pdfPreviewTemplate: TemplateRef<TSqGalleryListItemTemplateRefContext>;
 
-  /** Override the inner content of the top of the Viewer. Check `TSqGallerytopViewerTemplateRefContext` for variables access. */
-  @Input() topViewerTemplate: TemplateRef<TSqGallerytopViewerTemplateRefContext>;
+  /** Override the inner content of the top of the Viewer. Check `TSqGalleryTopViewerTemplateRefContext` for variables access. */
+  @Input() topViewerTemplate: TemplateRef<TSqGalleryTopViewerTemplateRefContext>;
 
-  /** Add content at the bottom of the Viewer. Check `TSqGallerybottomViewerTemplateRefContext` for variables access. */
-  @Input() bottomViewerTemplate: TemplateRef<TSqGallerybottomViewerTemplateRefContext>;
+  /** Add content at the bottom of the Viewer. Check `TSqGalleryBottomViewerTemplateRefContext` for variables access. */
+  @Input() bottomViewerTemplate: TemplateRef<TSqGalleryBottomViewerTemplateRefContext>;
 
   /** Override the loader shown at the Viewer. */
   @Input() loadingTemplate: TemplateRef<any>;

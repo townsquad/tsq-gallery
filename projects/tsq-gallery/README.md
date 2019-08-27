@@ -28,7 +28,7 @@ Run locally at [localhost:4200](http://localhost:4200/) with `ng serve`
 - **displayNavigation** - Toggle the navigation actions buttons at the Viewer.
 - **displayNavigationIndex** - Toggle display the image index count at the top of the Viewer.
 - **topViewerClass** - Override the class of the header of the Viewer. The class should either have `::ng-deep` (not recommended) or be global.
-- **topViewerTemplate** - Override the inner content of the top of the Viewer. Check `TSqGallerytopViewerTemplateRefContext` for variables access.
-- **bottomViewerTemplate** - Add content at the bottom of the Viewer. Check `TSqGallerybottomViewerTemplateRefContext` for variables access.
+- **topViewerTemplate** - Override the inner content of the top of the Viewer. Check `TSqGalleryTopViewerTemplateRefContext` for variables access.
+- **bottomViewerTemplate** - Add content at the bottom of the Viewer. Check `TSqGalleryBottomViewerTemplateRefContext` for variables access.
 - **loadingTemplate** - Override the loader shown at the Viewer.
 - **allowDownload** - Toogle display the option to download files on the Viewer.

@@ -3,8 +3,8 @@ import {Component, Input, Renderer2, TemplateRef, ElementRef, ViewChild} from '@
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {galleryAnimations} from '../../utils/gallery.animations';
 import {
-  TSqGallerybottomViewerTemplateRefContext,
-  TSqGallerytopViewerTemplateRefContext
+  TSqGalleryBottomViewerTemplateRefContext,
+  TSqGalleryTopViewerTemplateRefContext
 } from '../../models/tsq-gallery-template-ref-context.model';
 
 enum SupportedKeys {
@@ -39,7 +39,7 @@ export class TSqGalleryViewerComponent {
   get files() { return this.readFiles; }
 
   @Input() topViewerClass: string;
-  @Input() topViewerTemplate: TemplateRef<TSqGallerytopViewerTemplateRefContext>;
+  @Input() topViewerTemplate: TemplateRef<TSqGalleryTopViewerTemplateRefContext>;
   @Input() bottomViewerTemplate: TemplateRef<any>;
   @Input() loadingTemplate: TemplateRef<any>;
   @Input() showLoading: boolean;
@@ -81,7 +81,7 @@ export class TSqGalleryViewerComponent {
     return file;
   }
 
-  get topViewerContext(): TSqGallerytopViewerTemplateRefContext {
+  get topViewerContext(): TSqGalleryTopViewerTemplateRefContext {
     return {
       file: this.selectedFileToDisplay,
       index: this.selectedFileIndex,
@@ -91,11 +91,27 @@ export class TSqGalleryViewerComponent {
     };
   }
 
-  get bottomViewerContext(): TSqGallerybottomViewerTemplateRefContext {
+  get bottomViewerContext(): TSqGalleryBottomViewerTemplateRefContext {
     return {
       file: this.selectedFileToDisplay,
       index: this.selectedFileIndex,
     };
+  }
+
+  get canZoomIn(): boolean {
+    return this.imageZoom < 2;
+  }
+
+  get canZoomOut(): boolean {
+    return this.imageZoom > 0.5;
+  }
+
+  get canGoFoward(): boolean {
+    return this.selectedFileIndex < this.files.length - 1;
+  }
+
+  get canGoBack(): boolean {
+    return this.selectedFileIndex > 0;
   }
 
   resetPosition(resetRotation: boolean = true) {
@@ -130,92 +146,91 @@ export class TSqGalleryViewerComponent {
     this.renderer.removeStyle(document.body, 'overflow');
   }
 
-  onKeyUp(keyboardEvent: KeyboardEvent) {
+  onKeyUp() {
+    this.isMoving = false;
+  }
+
+  onKeyDown(keyboardEvent: KeyboardEvent) {
     const key = keyboardEvent.key;
+    this.isMoving = true;
 
-    if (!this.keypress) {
-      this.keypress = true;
-
-      switch (key) {
-        case SupportedKeys.ArrowLeft: {
-          this.goBack();
-          break;
-        }
-        case SupportedKeys.ArrowRight: {
-          this.goFoward();
-          break;
-        }
-        case SupportedKeys.Esc: {
-          if (!this.showLoading) {
-            this.close();
-          }
-          break;
-        }
-        case SupportedKeys.ArrowDown : {
-          switch (this.imageRotation % 360) {
-            case 0:
-            case -360: {
-              this.positionTop -= 40;
-              break;
-            }
-            case 90:
-            case -270: {
-              this.positionLeft -= 40;
-              break;
-            }
-            case 180:
-            case -180: {
-              this.positionTop += 40;
-              break;
-            }
-            case 270:
-            case -90: {
-              this.positionLeft += 40;
-              break;
-            }
-          }
-          break;
-        }
-        case SupportedKeys.ArrowUp : {
-          switch (this.imageRotation % 360) {
-            case 0:
-            case -360: {
-              this.positionTop += 40;
-              break;
-            }
-            case 90:
-            case -270: {
-              this.positionLeft += 40;
-              break;
-            }
-            case 180:
-            case -180: {
-              this.positionTop -= 40;
-              break;
-            }
-            case 270:
-            case -90: {
-              this.positionLeft -= 40;
-              break;
-            }
-          }
-          break;
-        }
-        case SupportedKeys.Minus : {
-          if (this.canZoomOut) {
-            this.zoomOut();
-          }
-          break;
-        }
-        case SupportedKeys.Plus : {
-          if (this.canZoomIn) {
-            this.zoomIn();
-          }
-          break;
-        }
+    switch (key) {
+      case SupportedKeys.ArrowLeft: {
+        this.goBack();
+        break;
       }
-
-      setTimeout(() => { this.keypress = false; }, 150);
+      case SupportedKeys.ArrowRight: {
+        this.goFoward();
+        break;
+      }
+      case SupportedKeys.Esc: {
+        if (!this.showLoading) {
+          this.close();
+        }
+        break;
+      }
+      case SupportedKeys.ArrowDown : {
+        switch (this.imageRotation % 360) {
+          case 0:
+          case -360: {
+            this.positionTop -= 40;
+            break;
+          }
+          case 90:
+          case -270: {
+            this.positionLeft -= 40;
+            break;
+          }
+          case 180:
+          case -180: {
+            this.positionTop += 40;
+            break;
+          }
+          case 270:
+          case -90: {
+            this.positionLeft += 40;
+            break;
+          }
+        }
+        break;
+      }
+      case SupportedKeys.ArrowUp : {
+        switch (this.imageRotation % 360) {
+          case 0:
+          case -360: {
+            this.positionTop += 40;
+            break;
+          }
+          case 90:
+          case -270: {
+            this.positionLeft += 40;
+            break;
+          }
+          case 180:
+          case -180: {
+            this.positionTop -= 40;
+            break;
+          }
+          case 270:
+          case -90: {
+            this.positionLeft -= 40;
+            break;
+          }
+        }
+        break;
+      }
+      case SupportedKeys.Minus : {
+        if (this.canZoomOut) {
+          this.zoomOut();
+        }
+        break;
+      }
+      case SupportedKeys.Plus : {
+        if (this.canZoomIn) {
+          this.zoomIn();
+        }
+        break;
+      }
     }
   }
 
@@ -225,18 +240,10 @@ export class TSqGalleryViewerComponent {
     }
   }
 
-  get canZoomIn(): boolean {
-    return this.imageZoom < 2;
-  }
-
   zoomOut() {
     if (this.canZoomOut) {
       this.imageZoom -= 0.1;
     }
-  }
-
-  get canZoomOut(): boolean {
-    return this.imageZoom > 0.5;
   }
 
   dragDown(e: TouchEvent | MouseEvent) {
@@ -316,18 +323,10 @@ export class TSqGalleryViewerComponent {
     }
   }
 
-  get canGoFoward(): boolean {
-    return this.selectedFileIndex < this.files.length - 1;
-  }
-
   private goBack() {
     if (this.canGoBack) {
       this.resetPosition();
       this.selectedFileIndex--;
     }
-  }
-
-  get canGoBack(): boolean {
-    return this.selectedFileIndex > 0;
   }
 }
