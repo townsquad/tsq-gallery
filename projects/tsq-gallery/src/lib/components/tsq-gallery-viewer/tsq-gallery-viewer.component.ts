@@ -325,14 +325,14 @@ export class TSqGalleryViewerComponent {
     aTag.remove();
   }
 
-  private goFoward() {
+  goFoward() {
     if (this.canGoFoward) {
       this.resetPosition();
       this.selectedFileIndex++;
     }
   }
 
-  private goBack() {
+  goBack() {
     if (this.canGoBack) {
       this.resetPosition();
       this.selectedFileIndex--;
