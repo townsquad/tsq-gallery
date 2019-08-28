@@ -1,8 +1,11 @@
 {
   "name": "tsq-gallery",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "peerDependencies": {
     "@angular/common": "^6.1.9",
     "@angular/core": "^6.1.9"
+  },
+  "dependencies": {
+    "ng2-pdf-viewer": "^5.3.3"
   }
 }

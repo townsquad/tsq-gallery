@@ -1,17 +1,21 @@
 #app {
-  padding: 100px;
+  padding: 30px 100px 30px 100px;
+  font-family: Nunito, sans-serif;
 }
 
-.gallery-item {
-  width: 200px;
-  height: 200px;
+.pointer-cursor {
+  cursor: pointer;
+}
+
+::ng-deep .gallery-item-custom {
+  width: 250px;
+  height: 250px;
+  flex-shrink: 0;
   display: inline-block;
   position: relative;
 
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  border: 1px solid #383838;
+
+  border: 1px dashed green;
   border-radius: 5px;
 
   &:not(:last-child) {
@@ -19,30 +23,62 @@
   }
 }
 
-.gallery-top-preview {
+.image-preview-custom {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.pdf-preview-custom {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-image: url("/assets/images/pdf-icon.svg");
+  background-size: 50%;
+}
+
+.custom-button {
+  color: green;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: gray 0px 2px 2px;
+  margin-top: 10px;
+}
+
+
+
+.gallery-top-viewer {
   padding: 16px;
   display: flex;
   justify-content: space-between;
 
-  > div:first-child {
-    color: greenyellow;
+  > div {
+    display: flex;
+    color: darkgreen;
     font-weight: bold;
+    font-size: 20px;
+  }
+  > div:not(:last-child) {
+    flex: 1;
   }
 
-  > div:last-child {
-    color: greenyellow;
-    font-weight: bold;
+  .close-action {
+    font-size: 30px;
+    margin-top: -10px;
   }
 }
 
-.gallery-bottom-preview {
+.gallery-bottom-viewer {
   padding: 16px;
   display: flex;
   justify-content: center;
   color: white;
-}
 
-.qwe {
-  background: yellow;
-  height: 1000px;
+  div {
+    margin-left: 10px;
+  }
 }
