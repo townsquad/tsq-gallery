@@ -4,8 +4,8 @@
      [ngStyle]="{'display': isViewerOpen ? 'flex' : 'none', 'cursor': isMoving? 'grabbing' : 'default'}"
      (keydown)="onKeyDown($event)"
      (keyup)="onKeyUp()"
-     (mouseup)="dragUp($event)"
-     (mouseleave)="dragUp($event)"
+     (mouseup)="dragUp()"
+     (mouseleave)="dragUp()"
      (click)="backdropClickClose && !isMoving && !showLoading && close()"
      #backdrop
      [@fadeInOut]>

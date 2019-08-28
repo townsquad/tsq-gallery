@@ -15,7 +15,7 @@
     </ng-container>
   </div>
   <ng-container *ngIf="!hasMiniPreviews">
-    <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultNavDisplayTemplate; context: getListItemContext()"></ng-container>
+    <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultNavDisplayTemplate; context: getListItemContext(null, null)"></ng-container>
   </ng-container>
 </div>
 
