@@ -316,7 +316,7 @@ export class TSqGalleryViewerComponent {
 
     const aTag = document.createElement('a');
     aTag.setAttribute('download', this.selectedFileToDisplay.name);
-    aTag.setAttribute('href', this.selectedFileToDisplay.displayUrl);
+    aTag.setAttribute('href', this.selectedFileToDisplay.downloadUrl);
 
     aTag.setAttribute('type', 'hidden');
 
