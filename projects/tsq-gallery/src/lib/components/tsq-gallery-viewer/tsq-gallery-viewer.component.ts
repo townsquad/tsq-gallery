@@ -312,8 +312,17 @@ export class TSqGalleryViewerComponent {
   }
 
   downloadFile() {
-    const file = this.selectedFileToDisplay;
-    window.open(file.downloadUrl, '_blank');
+    const url = this.selectedFileToDisplay.downloadUrl;
+
+    const aTag = document.createElement('a');
+    aTag.setAttribute('download', this.selectedFileToDisplay.name);
+    aTag.setAttribute('href', this.selectedFileToDisplay.displayUrl);
+
+    aTag.setAttribute('type', 'hidden');
+
+    document.body.appendChild(aTag);
+    aTag.click();
+    aTag.remove();
   }
 
   private goFoward() {
