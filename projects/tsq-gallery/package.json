@@ -15,7 +15,10 @@
   "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^6.1.9",
-    "@angular/core": "^6.1.9",
+    "@angular/core": "^6.1.9"
+  },
+  "dependencies": {
+    "tslib": "^1.9.0",
     "ng2-pdf-viewer": "^5.3.3"
   },
   "main": "bundles/tsq-gallery.umd.js",
@@ -28,9 +31,6 @@
   "typings": "tsq-gallery.d.ts",
   "metadata": "tsq-gallery.metadata.json",
   "sideEffects": false,
-  "dependencies": {
-    "tslib": "^1.9.0"
-  },
   "bugs": {
     "url": "https://github.com/townsquad/tsq-gallery/issues"
   },

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {TSqGalleryFileModel} from '../../projects/tsq-gallery/src/lib/models/tsq-gallery-file.model';
+import {TSqGalleryFileModel} from 'tsq-gallery/lib/models/tsq-gallery-file.model';
 
 @Component({
   selector: 'tsq-root',

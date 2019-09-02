@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
 
 import {TSqGalleryComponent} from './components/main-tsq-gallery/main-tsq-gallery.component';
 import {TSqGalleryViewerComponent} from './components/tsq-gallery-viewer/tsq-gallery-viewer.component';

@@ -3,5 +3,6 @@
   "dest": "../../dist/tsq-gallery",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "whitelistedNonPeerDependencies": ["."]
 }
