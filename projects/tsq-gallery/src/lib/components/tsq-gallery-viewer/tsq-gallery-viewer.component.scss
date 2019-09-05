@@ -43,12 +43,23 @@
       margin-left: auto;
     }
 
+    .title-container {
+      min-width: 0;
+
+      > span {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+    }
+
     .action {
       font-size: 20px;
       cursor: pointer;
       margin-top: -5px;
       user-select: none;
       margin-left: 10px;
+      color: white;
 
       &.disabled {
         cursor: default;

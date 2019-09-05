@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {PdfViewerModule} from 'ng2-pdf-viewer';
 
@@ -14,12 +13,10 @@ import {TSqGalleryViewerComponent} from './components/tsq-gallery-viewer/tsq-gal
   ],
   imports: [
     CommonModule,
-    BrowserAnimationsModule,
     PdfViewerModule,
   ],
   exports: [
     TSqGalleryComponent,
   ]
 })
-export class TSqGalleryModule {
-}
+export class TSqGalleryModule {}
