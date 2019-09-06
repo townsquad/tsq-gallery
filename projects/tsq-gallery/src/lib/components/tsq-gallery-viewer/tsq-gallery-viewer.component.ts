@@ -1,4 +1,6 @@
-import {Component, Input, Renderer2, TemplateRef, ElementRef, ViewChild} from '@angular/core';
+import {Component, Input, Renderer2, TemplateRef, ElementRef, ViewChild, HostListener} from '@angular/core';
+
+import {PDFProgressData} from 'ng2-pdf-viewer';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {galleryAnimations} from '../../utils/gallery.animations';
@@ -55,6 +57,8 @@ export class TSqGalleryViewerComponent {
   positionLeft = 0;
   positionTop = 0;
 
+  isScrolling = false;
+  pdfLoading = false;
   keypress = false;
   isMoving = false;
   imageRotation = 0;
@@ -148,6 +152,44 @@ export class TSqGalleryViewerComponent {
 
   onKeyUp() {
     this.isMoving = false;
+  }
+
+  @HostListener('document:wheel', ['$event'])
+  privateonWindowScroll($event) {
+    if ($event.wheelDeltaY < 0 || $event.wheelDeltaY > 0) {
+      this.isScrolling = true;
+
+      switch (this.imageRotation % 360) {
+        case 0:
+        case -360: {
+          this.positionTop += $event.wheelDeltaY;
+          break;
+        }
+        case 90:
+        case -270: {
+          this.positionLeft += $event.wheelDeltaY;
+          break;
+        }
+        case 180:
+        case -180: {
+          this.positionTop -= $event.wheelDeltaY;
+          break;
+        }
+        case 270:
+        case -90: {
+          this.positionLeft -= $event.wheelDeltaY;
+          break;
+        }
+      }
+    }
+
+    setTimeout(() => {
+      this.isScrolling = false;
+    }, (10));
+  }
+
+  onProgress(progressData: PDFProgressData) {
+    this.pdfLoading = progressData.loaded < progressData.total;
   }
 
   onKeyDown(keyboardEvent: KeyboardEvent) {
@@ -329,6 +371,7 @@ export class TSqGalleryViewerComponent {
     if (this.canGoFoward) {
       this.resetPosition();
       this.selectedFileIndex++;
+      this.pdfLoading = false;
     }
   }
 
@@ -336,6 +379,7 @@ export class TSqGalleryViewerComponent {
     if (this.canGoBack) {
       this.resetPosition();
       this.selectedFileIndex--;
+      this.pdfLoading = false;
     }
   }
 }
