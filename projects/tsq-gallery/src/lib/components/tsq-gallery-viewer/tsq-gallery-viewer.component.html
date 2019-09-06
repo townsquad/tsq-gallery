@@ -15,7 +15,7 @@
 
     <div [ngClass]="topViewerClass || 'viewer-top-default'"
          *ngIf="!topViewerTemplate">
-      <div>{{selectedFileToDisplay.name}}</div>
+      <div class="title-container"><span>{{selectedFileToDisplay.name}}</span></div>
       <div *ngIf="files.length > 1">{{selectedFileIndex + 1}} / {{files.length}}</div>
       <div>
         <div (click)="$event.stopPropagation(); downloadFile()"
