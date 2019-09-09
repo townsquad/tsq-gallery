@@ -63,6 +63,8 @@ export class TSqGalleryViewerComponent {
   imageRotation = 0;
   imageZoom = 1;
   selectedFileIndex: number;
+  scrollListener: () => void;
+
   @ViewChild('backdrop', {static: false}) backdropRef: ElementRef;
 
   private readFiles: TSqGalleryFileModel[];
@@ -138,7 +140,15 @@ export class TSqGalleryViewerComponent {
     this.isOpen = true;
     this.selectedFileIndex = index || 0;
     this.renderer.setStyle(document.body, 'overflow', 'hidden');
-    setTimeout(() => this.backdropRef.nativeElement.focus(), 10);
+    setTimeout(() => {
+      if (!!this.backdropRef) {
+        this.backdropRef.nativeElement.focus();
+      }
+
+      this.resetPosition();
+    }, 10);
+
+    this.scrollListener = this.renderer.listen('document', 'wheel', ($event) => this.onWindowScroll($event));
   }
 
   close() {
@@ -147,14 +157,47 @@ export class TSqGalleryViewerComponent {
     this.isOpen = false;
     this.selectedFileIndex = undefined;
     this.renderer.removeStyle(document.body, 'overflow');
+
+    if (this.scrollListener) {
+      this.scrollListener();
+    }
+  }
+
+  onWindowScroll($event) {
+    if ($event.wheelDeltaY < 0 || $event.wheelDeltaY > 0) {
+      this.isScrolling = true;
+
+      switch (this.imageRotation % 360) {
+        case 0:
+        case -360: {
+          this.positionTop += $event.wheelDeltaY;
+          break;
+        }
+        case 90:
+        case -270: {
+          this.positionLeft += $event.wheelDeltaY;
+          break;
+        }
+        case 180:
+        case -180: {
+          this.positionTop -= $event.wheelDeltaY;
+          break;
+        }
+        case 270:
+        case -90: {
+          this.positionLeft -= $event.wheelDeltaY;
+          break;
+        }
+      }
+    }
+
+    setTimeout(() => {
+      this.isScrolling = false;
+    }, (10));
   }
 
   onProgress(progressData: PDFProgressData) {
     this.pdfLoading = progressData.loaded < progressData.total;
-  }
-
-  onKeyUp() {
-    this.isMoving = false;
   }
 
   onKeyDown(keyboardEvent: KeyboardEvent) {
@@ -239,6 +282,10 @@ export class TSqGalleryViewerComponent {
         break;
       }
     }
+  }
+
+  onKeyUp() {
+    this.isMoving = false;
   }
 
   zoomIn() {
