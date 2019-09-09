@@ -1,4 +1,5 @@
 import {Component, Input, Renderer2, TemplateRef, ElementRef, ViewChild} from '@angular/core';
+import {PDFProgressData} from 'ng2-pdf-viewer';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {galleryAnimations} from '../../utils/gallery.animations';
@@ -55,6 +56,8 @@ export class TSqGalleryViewerComponent {
   positionLeft = 0;
   positionTop = 0;
 
+  isScrolling = false;
+  pdfLoading = false;
   keypress = false;
   isMoving = false;
   imageRotation = 0;
@@ -144,6 +147,10 @@ export class TSqGalleryViewerComponent {
     this.isOpen = false;
     this.selectedFileIndex = undefined;
     this.renderer.removeStyle(document.body, 'overflow');
+  }
+
+  onProgress(progressData: PDFProgressData) {
+    this.pdfLoading = progressData.loaded < progressData.total;
   }
 
   onKeyUp() {
@@ -329,6 +336,7 @@ export class TSqGalleryViewerComponent {
     if (this.canGoFoward) {
       this.resetPosition();
       this.selectedFileIndex++;
+      this.pdfLoading = false;
     }
   }
 
@@ -336,6 +344,7 @@ export class TSqGalleryViewerComponent {
     if (this.canGoBack) {
       this.resetPosition();
       this.selectedFileIndex--;
+      this.pdfLoading = false;
     }
   }
 }
