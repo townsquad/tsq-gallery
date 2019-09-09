@@ -1,4 +1,5 @@
 import {Component, Input, Renderer2, TemplateRef, ElementRef, ViewChild} from '@angular/core';
+import {PDFProgressData} from 'ng2-pdf-viewer';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {galleryAnimations} from '../../utils/gallery.animations';
@@ -55,11 +56,15 @@ export class TSqGalleryViewerComponent {
   positionLeft = 0;
   positionTop = 0;
 
+  isScrolling = false;
+  pdfLoading = false;
   keypress = false;
   isMoving = false;
   imageRotation = 0;
   imageZoom = 1;
   selectedFileIndex: number;
+  scrollListener: () => void;
+
   @ViewChild('backdrop', {static: false}) backdropRef: ElementRef;
 
   private readFiles: TSqGalleryFileModel[];
@@ -135,7 +140,15 @@ export class TSqGalleryViewerComponent {
     this.isOpen = true;
     this.selectedFileIndex = index || 0;
     this.renderer.setStyle(document.body, 'overflow', 'hidden');
-    setTimeout(() => this.backdropRef.nativeElement.focus(), 10);
+    setTimeout(() => {
+      if (!!this.backdropRef) {
+        this.backdropRef.nativeElement.focus();
+      }
+
+      this.resetPosition();
+    }, 10);
+
+    this.scrollListener = this.renderer.listen('document', 'wheel', ($event) => this.onWindowScroll($event));
   }
 
   close() {
@@ -144,10 +157,47 @@ export class TSqGalleryViewerComponent {
     this.isOpen = false;
     this.selectedFileIndex = undefined;
     this.renderer.removeStyle(document.body, 'overflow');
+
+    if (this.scrollListener) {
+      this.scrollListener();
+    }
   }
 
-  onKeyUp() {
-    this.isMoving = false;
+  onWindowScroll($event) {
+    if ($event.wheelDeltaY < 0 || $event.wheelDeltaY > 0) {
+      this.isScrolling = true;
+
+      switch (this.imageRotation % 360) {
+        case 0:
+        case -360: {
+          this.positionTop += $event.wheelDeltaY;
+          break;
+        }
+        case 90:
+        case -270: {
+          this.positionLeft += $event.wheelDeltaY;
+          break;
+        }
+        case 180:
+        case -180: {
+          this.positionTop -= $event.wheelDeltaY;
+          break;
+        }
+        case 270:
+        case -90: {
+          this.positionLeft -= $event.wheelDeltaY;
+          break;
+        }
+      }
+    }
+
+    setTimeout(() => {
+      this.isScrolling = false;
+    }, (10));
+  }
+
+  onProgress(progressData: PDFProgressData) {
+    this.pdfLoading = progressData.loaded < progressData.total;
   }
 
   onKeyDown(keyboardEvent: KeyboardEvent) {
@@ -232,6 +282,10 @@ export class TSqGalleryViewerComponent {
         break;
       }
     }
+  }
+
+  onKeyUp() {
+    this.isMoving = false;
   }
 
   zoomIn() {
@@ -329,6 +383,7 @@ export class TSqGalleryViewerComponent {
     if (this.canGoFoward) {
       this.resetPosition();
       this.selectedFileIndex++;
+      this.pdfLoading = false;
     }
   }
 
@@ -336,6 +391,7 @@ export class TSqGalleryViewerComponent {
     if (this.canGoBack) {
       this.resetPosition();
       this.selectedFileIndex--;
+      this.pdfLoading = false;
     }
   }
 }
