@@ -56,7 +56,6 @@ export class TSqGalleryViewerComponent {
   positionLeft = 0;
   positionTop = 0;
 
-  isScrolling = false;
   pdfLoading = false;
   keypress = false;
   isMoving = false;
@@ -104,7 +103,7 @@ export class TSqGalleryViewerComponent {
   }
 
   get canZoomIn(): boolean {
-    return this.imageZoom < 2;
+    return this.imageZoom < 1.8;
   }
 
   get canZoomOut(): boolean {
@@ -120,7 +119,6 @@ export class TSqGalleryViewerComponent {
   }
 
   resetPosition(resetRotation: boolean = true) {
-    this.isMoving = true;
     this.imageZoom = 1;
     this.initialX = 0;
     this.initialY = 0;
@@ -132,8 +130,6 @@ export class TSqGalleryViewerComponent {
     if (resetRotation) {
       this.imageRotation = 0;
     }
-
-    setTimeout(() => { this.isMoving = false; }, 10);
   }
 
   open(index?: number) {
@@ -163,37 +159,41 @@ export class TSqGalleryViewerComponent {
     }
   }
 
-  onWindowScroll($event) {
-    if ($event.wheelDeltaY < 0 || $event.wheelDeltaY > 0) {
-      this.isScrolling = true;
+  onWindowScroll($event: WheelEvent) {
+    if ($event.ctrlKey) {
+      if (!window['chrome']) {
+        const zoomValue = $event.deltaY * 0.01;
 
+        if (zoomValue > 0 && this.canZoomOut) {
+          this.imageZoom -= zoomValue;
+        } else if (zoomValue < 0 && this.canZoomIn) {
+          this.imageZoom -= zoomValue;
+        }
+      }
+    } else if ($event.deltaY < 0 || $event.deltaY > 0) {
       switch (this.imageRotation % 360) {
         case 0:
         case -360: {
-          this.positionTop += $event.wheelDeltaY;
+          this.positionTop += this.zoomModifier($event.deltaY * 0.7);
           break;
         }
         case 90:
         case -270: {
-          this.positionLeft += $event.wheelDeltaY;
+          this.positionLeft += this.zoomModifier($event.deltaY * 0.7);
           break;
         }
         case 180:
         case -180: {
-          this.positionTop -= $event.wheelDeltaY;
+          this.positionTop -= this.zoomModifier($event.deltaY * 0.7);
           break;
         }
         case 270:
         case -90: {
-          this.positionLeft -= $event.wheelDeltaY;
+          this.positionLeft -= this.zoomModifier($event.deltaY * 0.7);
           break;
         }
       }
     }
-
-    setTimeout(() => {
-      this.isScrolling = false;
-    }, (10));
   }
 
   onProgress(progressData: PDFProgressData) {
@@ -202,7 +202,6 @@ export class TSqGalleryViewerComponent {
 
   onKeyDown(keyboardEvent: KeyboardEvent) {
     const key = keyboardEvent.key;
-    this.isMoving = true;
 
     switch (key) {
       case SupportedKeys.ArrowLeft: {
@@ -223,22 +222,22 @@ export class TSqGalleryViewerComponent {
         switch (this.imageRotation % 360) {
           case 0:
           case -360: {
-            this.positionTop -= 40;
+            this.positionTop -= this.zoomModifier(40);
             break;
           }
           case 90:
           case -270: {
-            this.positionLeft -= 40;
+            this.positionLeft -= this.zoomModifier(40);
             break;
           }
           case 180:
           case -180: {
-            this.positionTop += 40;
+            this.positionTop += this.zoomModifier(40);
             break;
           }
           case 270:
           case -90: {
-            this.positionLeft += 40;
+            this.positionLeft += this.zoomModifier(40);
             break;
           }
         }
@@ -248,22 +247,22 @@ export class TSqGalleryViewerComponent {
         switch (this.imageRotation % 360) {
           case 0:
           case -360: {
-            this.positionTop += 40;
+            this.positionTop += this.zoomModifier(40);
             break;
           }
           case 90:
           case -270: {
-            this.positionLeft += 40;
+            this.positionLeft += this.zoomModifier(40);
             break;
           }
           case 180:
           case -180: {
-            this.positionTop -= 40;
+            this.positionTop -= this.zoomModifier(40);
             break;
           }
           case 270:
           case -90: {
-            this.positionLeft -= 40;
+            this.positionLeft -= this.zoomModifier(40);
             break;
           }
         }
@@ -284,10 +283,6 @@ export class TSqGalleryViewerComponent {
     }
   }
 
-  onKeyUp() {
-    this.isMoving = false;
-  }
-
   zoomIn() {
     if (this.canZoomIn) {
       this.imageZoom += 0.1;
@@ -300,7 +295,7 @@ export class TSqGalleryViewerComponent {
     }
   }
 
-  dragDown(e: TouchEvent | MouseEvent) {
+  dragDown(e) {
     this.initialX = this.getClientX(e);
     this.initialY = this.getClientY(e);
     this.initialLeft = this.positionLeft;
@@ -309,36 +304,34 @@ export class TSqGalleryViewerComponent {
   }
 
   dragUp() {
-    setTimeout(() => {
-      this.isMoving = false;
-    }, (10));
+    this.isMoving = false;
   }
 
-  dragMove(e: TouchEvent | MouseEvent) {
+  dragMove(e) {
     if (this.isMoving) {
       switch (this.imageRotation % 360) {
         case 0:
         case -360: {
-          this.positionLeft = this.initialLeft + (this.getClientX(e) - this.initialX);
-          this.positionTop = this.initialTop + (this.getClientY(e) - this.initialY);
+          this.positionLeft = this.zoomModifier(this.initialLeft + (this.getClientX(e) - this.initialX)) ;
+          this.positionTop = this.zoomModifier(this.initialTop + (this.getClientY(e) - this.initialY));
           break;
         }
         case 90:
         case -270: {
-          this.positionLeft = this.initialLeft + (this.getClientY(e) - this.initialY);
-          this.positionTop = this.initialTop + (-this.getClientX(e) + this.initialX);
+          this.positionLeft = this.zoomModifier(this.initialLeft + (this.getClientY(e) - this.initialY));
+          this.positionTop = this.zoomModifier(this.initialTop + (-this.getClientX(e) + this.initialX));
           break;
         }
         case 180:
         case -180: {
-          this.positionLeft = this.initialLeft + (-this.getClientX(e) + this.initialX);
-          this.positionTop = this.initialTop + (-this.getClientY(e) + this.initialY);
+          this.positionLeft = this.zoomModifier(this.initialLeft + (-this.getClientX(e) + this.initialX));
+          this.positionTop = this.zoomModifier(this.initialTop + (-this.getClientY(e) + this.initialY));
           break;
         }
         case 270:
         case -90: {
-          this.positionLeft = this.initialLeft + (-this.getClientY(e) + this.initialY);
-          this.positionTop = this.initialTop + (this.getClientX(e) - this.initialX);
+          this.positionLeft = this.zoomModifier(this.initialLeft + (-this.getClientY(e) + this.initialY));
+          this.positionTop = this.zoomModifier(this.initialTop + (this.getClientX(e) - this.initialX));
           break;
         }
       }
@@ -346,15 +339,19 @@ export class TSqGalleryViewerComponent {
   }
 
   getClientX(e: TouchEvent | MouseEvent): number {
-    return e instanceof TouchEvent ?
-      e.touches[0].clientX :
-      e.clientX;
+    return e instanceof MouseEvent ?
+      e.clientX :
+      e.touches[0].clientX;
   }
 
   getClientY(e: TouchEvent | MouseEvent): number {
-    return e instanceof TouchEvent ?
-      e.touches[0].clientY :
-      e.clientY;
+    return e instanceof MouseEvent ?
+      e.clientY :
+      e.touches[0].clientY;
+  }
+
+  zoomModifier(value: number) {
+    return value * ((2 - this.imageZoom) * 1.1);
   }
 
   turnLeft() {

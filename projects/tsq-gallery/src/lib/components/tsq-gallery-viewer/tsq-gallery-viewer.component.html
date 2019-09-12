@@ -3,7 +3,6 @@
      tabindex="0"
      [ngStyle]="{'display': isViewerOpen ? 'flex' : 'none', 'cursor': isMoving? 'grabbing' : 'default'}"
      (keydown)="onKeyDown($event)"
-     (keyup)="onKeyUp()"
      (mouseup)="dragUp()"
      (mouseleave)="dragUp()"
      (click)="backdropClickClose && !isMoving && !showLoading && close()"
@@ -50,11 +49,10 @@
 
         <img *ngIf="selectedFileToDisplay.type === 'image'"
              draggable="false"
-             [class.dragging]="isMoving || isScrolling"
              [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : 'grab'}"
              [src]="selectedFileToDisplay.displayUrl"
              [alt]="selectedFileToDisplay.displayAlt"
-             (mousedown)="dragDown($event)"
+             (mousedown)="$event.preventDefault(); dragDown($event)"
              (mousemove)="dragMove($event)"
              (touchmove)="dragMove($event)"
              (click)="$event.stopPropagation()">
@@ -62,7 +60,6 @@
         <div *ngIf="selectedFileToDisplay.type === 'pdf'"
              class="pdf-container"
              draggable="false"
-             [class.dragging]="isMoving || isScrolling"
              [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : 'grab'}"
              (mousedown)="dragDown($event)"
              (mousemove)="dragMove($event)"
