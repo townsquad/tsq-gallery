@@ -19,19 +19,31 @@
       <div>
         <div (click)="$event.stopPropagation(); downloadFile()"
              *ngIf="allowDownload"
-             class="pointer-cursor action download-icon">&#11015;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'cloud-download-alt']"></fa-icon>
+            </div>
         <div (click)="$event.stopPropagation(); zoomIn()"
              [class.disabled]="!canZoomIn"
-             class="pointer-cursor action">&oplus;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'search-plus']"></fa-icon>
+        </div>
         <div (click)="$event.stopPropagation(); zoomOut()"
              [class.disabled]="!canZoomOut"
-             class="pointer-cursor action">&#8854;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'search-minus']"></fa-icon>
+        </div>
         <div (click)="$event.stopPropagation(); turnLeft()"
-             class="pointer-cursor action turn-left-icon">&#8634;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon>
+        </div>
         <div (click)="$event.stopPropagation(); turnRight()"
-             class="pointer-cursor action turn-right-icon">&#8634;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'redo-alt']"></fa-icon>
+        </div>
         <div (click)="$event.stopPropagation(); close()"
-             class="pointer-cursor action close-icon">&times;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'times-circle']"></fa-icon>
+        </div>
       </div>
     </div>
   </div>
