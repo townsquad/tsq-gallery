@@ -5,6 +5,9 @@
     "entryFile": "src/public-api.ts"
   },
   "whitelistedNonPeerDependencies": [
-    "ng2-pdf-viewer"
+    "ng2-pdf-viewer",
+    "@fortawesome/angular-fontawesome",
+    "@fortawesome/free-solid-svg-icons",
+    "@fortawesome/fontawesome-svg-core"
   ]
 }

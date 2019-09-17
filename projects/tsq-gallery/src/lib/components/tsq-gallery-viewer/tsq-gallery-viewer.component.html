@@ -3,7 +3,6 @@
      tabindex="0"
      [ngStyle]="{'display': isViewerOpen ? 'flex' : 'none', 'cursor': isMoving? 'grabbing' : 'default'}"
      (keydown)="onKeyDown($event)"
-     (keyup)="onKeyUp()"
      (mouseup)="dragUp()"
      (mouseleave)="dragUp()"
      (click)="backdropClickClose && !isMoving && !showLoading && close()"
@@ -20,19 +19,31 @@
       <div>
         <div (click)="$event.stopPropagation(); downloadFile()"
              *ngIf="allowDownload"
-             class="pointer-cursor action download-icon">&#11015;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'cloud-download-alt']"></fa-icon>
+            </div>
         <div (click)="$event.stopPropagation(); zoomIn()"
              [class.disabled]="!canZoomIn"
-             class="pointer-cursor action">&oplus;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'search-plus']"></fa-icon>
+        </div>
         <div (click)="$event.stopPropagation(); zoomOut()"
              [class.disabled]="!canZoomOut"
-             class="pointer-cursor action">&#8854;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'search-minus']"></fa-icon>
+        </div>
         <div (click)="$event.stopPropagation(); turnLeft()"
-             class="pointer-cursor action turn-left-icon">&#8634;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon>
+        </div>
         <div (click)="$event.stopPropagation(); turnRight()"
-             class="pointer-cursor action turn-right-icon">&#8634;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'redo-alt']"></fa-icon>
+        </div>
         <div (click)="$event.stopPropagation(); close()"
-             class="pointer-cursor action close-icon">&times;</div>
+             class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'times-circle']"></fa-icon>
+        </div>
       </div>
     </div>
   </div>
@@ -50,11 +61,10 @@
 
         <img *ngIf="selectedFileToDisplay.type === 'image'"
              draggable="false"
-             [class.dragging]="isMoving || isScrolling"
              [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : 'grab'}"
              [src]="selectedFileToDisplay.displayUrl"
              [alt]="selectedFileToDisplay.displayAlt"
-             (mousedown)="dragDown($event)"
+             (mousedown)="$event.preventDefault(); dragDown($event)"
              (mousemove)="dragMove($event)"
              (touchmove)="dragMove($event)"
              (click)="$event.stopPropagation()">
@@ -62,7 +72,6 @@
         <div *ngIf="selectedFileToDisplay.type === 'pdf'"
              class="pdf-container"
              draggable="false"
-             [class.dragging]="isMoving || isScrolling"
              [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : 'grab'}"
              (mousedown)="dragDown($event)"
              (mousemove)="dragMove($event)"
