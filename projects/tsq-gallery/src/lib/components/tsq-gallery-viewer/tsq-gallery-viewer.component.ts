@@ -1,5 +1,6 @@
 import {Component, Input, Renderer2, TemplateRef, ElementRef, ViewChild} from '@angular/core';
 import {PDFProgressData} from 'ng2-pdf-viewer';
+import {throttle} from 'lodash';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {galleryAnimations} from '../../utils/gallery.animations';
@@ -104,7 +105,7 @@ export class TSqGalleryViewerComponent {
   }
 
   get canDrag(): boolean {
-    return this.imageZoom > 1.1;
+    return this.imageZoom > 1.0;
   }
 
   get canZoomIn(): boolean {
@@ -149,7 +150,8 @@ export class TSqGalleryViewerComponent {
       this.resetPosition();
     }, 10);
 
-    this.scrollListener = this.renderer.listen('document', 'wheel', ($event) => this.onWindowScroll($event));
+    const throttleFunc = throttle(this.onWindowScroll, 1);
+    this.scrollListener = this.renderer.listen('document', 'wheel', throttleFunc);
 
     this.renderer.setStyle(document.body, 'overscroll-behavior-x', 'none');
   }
@@ -161,14 +163,14 @@ export class TSqGalleryViewerComponent {
     this.selectedFileIndex = undefined;
     this.renderer.removeStyle(document.body, 'overflow');
 
-    if (this.scrollListener) {
+    if (!!this.scrollListener) {
       this.scrollListener();
     }
 
     this.renderer.removeClass(document.body, 'overscroll-behavior-x');
   }
 
-  onWindowScroll($event: WheelEvent) {
+  onWindowScroll = ($event: WheelEvent) => {
     if ($event.ctrlKey) {
       if (!window['chrome']) {
         const zoomValue = $event.deltaY * 0.01;
@@ -206,9 +208,9 @@ export class TSqGalleryViewerComponent {
           }
         }
       } else {
-        if ($event.deltaX > 10) {
+        if ($event.deltaX > 15) {
           this.goFoward();
-        } else if ($event.deltaX < -10) {
+        } else if ($event.deltaX < -15) {
           this.goBack();
         }
       }
@@ -345,11 +347,11 @@ export class TSqGalleryViewerComponent {
       case 180:
       case -180:
       case -360: {
-        this.positionLeft = this.imageZoom > 1.1 ? this.positionLeft / 2 : 0;
+        this.positionLeft = this.imageZoom > 1.0 ? this.positionLeft / 2 : 0;
         break;
       }
       default: {
-        this.positionTop = this.imageZoom > 1.1 ? this.positionTop / 2 : 0;
+        this.positionTop = this.imageZoom > 1.0 ? this.positionTop / 2 : 0;
         break;
       }
     }
@@ -368,32 +370,30 @@ export class TSqGalleryViewerComponent {
   }
 
   dragMove(e) {
-    if (this.isMoving) {
-      switch (this.imageRotation % 360) {
-        case 0:
-        case -360: {
-          this.positionLeft = this.initialTop + this.zoomModifier((this.getClientX(e) - this.initialX)) ;
-          this.positionTop = this.initialTop + this.zoomModifier(this.initialTop + (this.getClientY(e) - this.initialY));
-          break;
-        }
-        case 90:
-        case -270: {
-          this.positionLeft = this.initialTop + this.zoomModifier((this.getClientY(e) - this.initialY));
-          this.positionTop = this.initialTop + this.zoomModifier((-this.getClientX(e) + this.initialX));
-          break;
-        }
-        case 180:
-        case -180: {
-          this.positionLeft = this.initialTop + this.zoomModifier((-this.getClientX(e) + this.initialX));
-          this.positionTop = this.initialTop + this.zoomModifier((-this.getClientY(e) + this.initialY));
-          break;
-        }
-        case 270:
-        case -90: {
-          this.positionLeft = this.initialLeft + this.zoomModifier((-this.getClientY(e) + this.initialY));
-          this.positionTop = this.initialTop + this.zoomModifier((this.getClientX(e) - this.initialX));
-          break;
-        }
+    switch (this.imageRotation % 360) {
+      case 0:
+      case -360: {
+        this.positionLeft = this.initialLeft + this.zoomModifier(this.getClientX(e) - this.initialX);
+        this.positionTop = this.initialTop + this.zoomModifier(this.getClientY(e) - this.initialY);
+        break;
+      }
+      case 90:
+      case -270: {
+        this.positionLeft = this.initialLeft + this.zoomModifier(this.getClientY(e) - this.initialY);
+        this.positionTop = this.initialTop + this.zoomModifier(-this.getClientX(e) + this.initialX);
+        break;
+      }
+      case 180:
+      case -180: {
+        this.positionLeft = this.initialLeft + this.zoomModifier(-this.getClientX(e) + this.initialX);
+        this.positionTop = this.initialTop + this.zoomModifier(-this.getClientY(e) + this.initialY);
+        break;
+      }
+      case 270:
+      case -90: {
+        this.positionLeft = this.initialLeft + this.zoomModifier(-this.getClientY(e) + this.initialY);
+        this.positionTop = this.initialTop + this.zoomModifier(this.getClientX(e) - this.initialX);
+        break;
       }
     }
   }
@@ -423,8 +423,6 @@ export class TSqGalleryViewerComponent {
   }
 
   downloadFile() {
-    const url = this.selectedFileToDisplay.downloadUrl;
-
     const aTag = document.createElement('a');
     aTag.setAttribute('download', this.selectedFileToDisplay.name);
     aTag.setAttribute('href', this.selectedFileToDisplay.downloadUrl);
@@ -443,7 +441,7 @@ export class TSqGalleryViewerComponent {
       this.pdfLoading = false;
 
       this.navigationDelay = true;
-      setTimeout(() => this.navigationDelay = false, 200);
+      setTimeout(() => this.navigationDelay = false, 250);
     }
   }
 
@@ -454,7 +452,7 @@ export class TSqGalleryViewerComponent {
       this.pdfLoading = false;
 
       this.navigationDelay = true;
-      setTimeout(() => this.navigationDelay = false, 200);
+      setTimeout(() => this.navigationDelay = false, 250);
     }
   }
 }
