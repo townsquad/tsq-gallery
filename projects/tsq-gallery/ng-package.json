@@ -6,6 +6,7 @@
   },
   "whitelistedNonPeerDependencies": [
     "ng2-pdf-viewer",
+    "lodash",
     "@fortawesome/angular-fontawesome",
     "@fortawesome/free-solid-svg-icons",
     "@fortawesome/fontawesome-svg-core"
