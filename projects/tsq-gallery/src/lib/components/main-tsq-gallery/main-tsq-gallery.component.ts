@@ -60,8 +60,11 @@ export class TSqGalleryComponent {
   /** Toggle display the image index count at the top of the Viewer. */
   @Input() displayNavigationIndex = true;
 
-  /** Toogle display the option to download files on the Viewer.  */
+  /** Toggle display the option to download files on the Viewer.  */
   @Input() allowDownload = true;
+
+  /** Option to change the displayed image when the files is of an unsupported format.  */
+  @Input() invalidFormatDisplayImage: string;
 
   /** Open preview for file of Index. */
   contextOpen = (index?: number) => {

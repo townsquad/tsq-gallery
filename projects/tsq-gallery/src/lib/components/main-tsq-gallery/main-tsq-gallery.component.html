@@ -3,7 +3,7 @@
     <ng-container *ngFor="let file of files; let i = index">
       <div [ngClass]="containerClass || 'default-gallery-item-container'">
 
-        <ng-container *ngIf="file.type === 'image'">
+        <ng-container *ngIf="file.type !== 'pdf'">
           <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultImagePreviewTemplate; context: getListItemContext(file, i)"></ng-container>
         </ng-container>
 
@@ -29,13 +29,31 @@
                      [backdropClickClose]="backdropClickClose"
                      [displayNavigation]="displayNavigation"
                      [allowDownload]="allowDownload"
+                     [invalidFormatDisplayImage]="invalidFormatDisplayImage"
                      [displayNavigationIndex]="displayNavigationIndex"></tsq-gallery-viewer>
 
 
 <ng-template #defaultImagePreviewTemplate let-index="index" let-type="type" let-url="url" let-alt="alt" let-fns="fns">
   <div class="default-gallery-item-content"
+       *ngIf="type === 'image'"
        (click)="fns.open(index)"
        [ngStyle]="{'background-image': 'url(\'' + url + '\')'}"></div>
+
+  <div class="default-gallery-item-content"
+       *ngIf="type !== 'image' && !!invalidFormatDisplayImage"
+       (click)="fns.open(index)"
+       [ngStyle]="{'background-image': 'url(\'' + invalidFormatDisplayImage + '\')'}"></div>
+
+  <div class="default-gallery-item-content unsupported-type-container"
+       *ngIf="type !== 'image' && !invalidFormatDisplayImage"
+       (click)="fns.open(index)">
+    <div class="unsupported-type-text">
+      Unsupported file type
+    </div>
+    <fa-icon class="unsupported-type-display"
+             [icon]="['fas', 'eye-slash']">
+    </fa-icon>
+  </div>
 </ng-template>
 
 <ng-template #defaultPdfPreviewTemplate let-index="index" let-type="type" let-url="url" let-alt="alt" let-fns="fns">
