@@ -21,7 +21,7 @@
               *ngIf="allowDownload"
               class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'cloud-download-alt']"></fa-icon>
-              </div>
+          </div>
           <div (click)="$event.stopPropagation(); zoomIn()"
               [class.disabled]="!canZoomIn"
               class="pointer-cursor action">
@@ -85,12 +85,28 @@
                         [render-text]="false"></pdf-viewer>
           </div>
 
+
+          <img *ngIf="selectedFileToDisplay.type !== 'pdf' && selectedFileToDisplay.type !== 'image' && !!invalidFormatDisplayImage"
+               [src]="invalidFormatDisplayImage"
+               [alt]="'Can\'t open such such format'">
+
+          <div *ngIf="selectedFileToDisplay.type !== 'pdf' && selectedFileToDisplay.type !== 'image' && !invalidFormatDisplayImage"
+                class="unsupported-type-container">
+            <div class="unsupported-type-text">
+              Unsupported file type
+            </div>
+            <fa-icon class="unsupported-type-display"
+                     [icon]="['fas', 'eye-slash']">
+            </fa-icon>
+          </div>
+
           <div *ngIf="displayNavigation"
               class="nav-action"
               [class.disabled]="!canGoFoward"
               (click)="$event.stopPropagation(); goFoward()">
             &rsaquo;
           </div>
+
         </div>
       </div>
     </ng-container>

@@ -45,3 +45,17 @@
   display: inline-block;
   position: relative;
 }
+
+.unsupported-type-container {
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  align-items: center;
+
+  .unsupported-type-text {
+    font-size: 15px;
+  }
+  .unsupported-type-display {
+    font-size: 30px;
+  }
+}

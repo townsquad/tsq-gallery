@@ -49,6 +49,7 @@ export class TSqGalleryViewerComponent {
   @Input() displayNavigation: boolean;
   @Input() displayNavigationIndex: boolean;
   @Input() allowDownload: boolean;
+  @Input() invalidFormatDisplayImage: string;
 
   initialX = 0;
   initialY = 0;
@@ -188,7 +189,7 @@ export class TSqGalleryViewerComponent {
         switch (this.imageRotation % 360) {
           case 0:
           case -360: {
-            this.positionLeft += this.zoomModifier($event.deltaX * 0.7);
+            this.positionLeft -= this.zoomModifier($event.deltaX * 0.7);
             break;
           }
           case 90:
@@ -198,7 +199,7 @@ export class TSqGalleryViewerComponent {
           }
           case 180:
           case -180: {
-            this.positionLeft -= this.zoomModifier($event.deltaX * 0.7);
+            this.positionLeft += this.zoomModifier($event.deltaX * 0.7);
             break;
           }
           case 270:
