@@ -83,6 +83,18 @@
 
     .pdf-container {
       max-height: 100%;
+
+      @media (max-width: 880px) {
+        zoom: 0.7;
+      }
+
+      @media (max-width: 670px) {
+        zoom: 0.5;
+      }
+
+      @media (max-width: 410px) {
+        zoom: 0.4;
+      }
     }
 
     img {
