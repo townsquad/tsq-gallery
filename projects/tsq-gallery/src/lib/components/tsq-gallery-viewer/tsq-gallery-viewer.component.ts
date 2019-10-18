@@ -57,6 +57,8 @@ export class TSqGalleryViewerComponent {
   initialTop = 0;
   positionLeft = 0;
   positionTop = 0;
+  touchTimeStamp = 0;
+  lastTouchX = 0;
 
   navigationDelay = false;
   pdfLoading = false;
@@ -358,16 +360,31 @@ export class TSqGalleryViewerComponent {
     }
   }
 
-  dragDown(e) {
+  dragDown(e, isTouch = false) {
     this.initialX = this.getClientX(e);
     this.initialY = this.getClientY(e);
     this.initialLeft = this.positionLeft;
     this.initialTop = this.positionTop;
-    this.isMoving = true;
+
+    if (!isTouch) {
+      this.isMoving = true;
+    } else {
+      this.touchTimeStamp = new Date().getTime();
+    }
   }
 
   dragUp() {
     this.isMoving = false;
+  }
+
+  touchEnd(e) {
+    if (Math.abs(this.positionLeft - this.initialLeft) > 100 && (new Date().getTime() - this.touchTimeStamp) < 200) {
+      if (this.positionLeft - this.initialLeft < 0) {
+        this.goFoward();
+      } else {
+        this.goBack();
+      }
+    }
   }
 
   dragMove(e) {
@@ -402,13 +419,13 @@ export class TSqGalleryViewerComponent {
   getClientX(e: TouchEvent | MouseEvent): number {
     return e instanceof MouseEvent ?
       e.clientX :
-      e.touches[0].clientX;
+      e.touches[0].pageX;
   }
 
   getClientY(e: TouchEvent | MouseEvent): number {
     return e instanceof MouseEvent ?
       e.clientY :
-      e.touches[0].clientY;
+      e.touches[0].pageY;
   }
 
   zoomModifier(value: number) {

@@ -66,7 +66,9 @@
               [alt]="selectedFileToDisplay.displayAlt"
               (mousedown)="$event.preventDefault(); canDrag && dragDown($event)"
               (mousemove)="canDrag && isMoving && dragMove($event)"
-              (touchmove)="canDrag && dragMove($event)"
+              (touchmove)="dragMove($event)"
+              (touchstart)="dragDown($event, true)"
+              (touchend)="touchEnd($event)"
               (click)="$event.stopPropagation()">
 
           <div *ngIf="selectedFileToDisplay.type === 'pdf'"
@@ -75,7 +77,9 @@
               [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : canDrag? 'grab' : 'default'}"
               (mousedown)="$event.preventDefault(); canDrag && dragDown($event)"
               (mousemove)="canDrag && isMoving && dragMove($event)"
-              (touchmove)="canDrag && dragMove($event)"
+              (touchmove)="dragMove($event)"
+              (touchstart)="dragDown($event, true)"
+              (touchend)="touchEnd($event)"
               (click)="$event.stopPropagation()">
 
             <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
