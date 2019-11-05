@@ -5,6 +5,9 @@
       (keydown)="onKeyDown($event)"
       (mouseup)="dragUp()"
       (mouseleave)="dragUp()"
+      (touchstart)="touchStart($event)"
+      (touchmove)="touchMove($event)"
+      (touchend)="touchEnd()"
       (click)="backdropClickClose && !isMoving && !showLoading && close()"
       #backdrop
       [@fadeInOut]>
@@ -51,7 +54,7 @@
     <ng-container *ngIf="!!files && !!selectedFileToDisplay">
       <div class="viewer-container">
         <div class="viewer-body"
-            [class.navigation]="displayNavigation">
+             [class.navigation]="displayNavigation">
           <div *ngIf="displayNavigation"
               class="nav-action"
               [class.disabled]="!canGoBack"
@@ -68,7 +71,6 @@
               (mousemove)="canDrag && isMoving && dragMove($event)"
               (touchmove)="dragMove($event)"
               (touchstart)="dragDown($event, true)"
-              (touchend)="touchEnd($event)"
               (click)="$event.stopPropagation()">
 
           <div *ngIf="selectedFileToDisplay.type === 'pdf'"
@@ -79,7 +81,6 @@
               (mousemove)="canDrag && isMoving && dragMove($event)"
               (touchmove)="dragMove($event)"
               (touchstart)="dragDown($event, true)"
-              (touchend)="touchEnd($event)"
               (click)="$event.stopPropagation()">
 
             <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
