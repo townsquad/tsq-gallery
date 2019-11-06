@@ -34,8 +34,8 @@ export class AppComponent {
       downloadUrl: './assets/images/04.png',
     },
     {
-      name: 'file_05.png',
-      type: 'image',
+      name: 'file_05.file',
+      type: 'file',
       displayUrl: './assets/images/05.png',
       downloadUrl: './assets/images/05.png',
     },

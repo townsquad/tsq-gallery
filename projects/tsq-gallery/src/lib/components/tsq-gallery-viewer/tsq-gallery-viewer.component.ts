@@ -58,7 +58,8 @@ export class TSqGalleryViewerComponent {
   positionLeft = 0;
   positionTop = 0;
   touchTimeStamp = 0;
-  lastTouchX = 0;
+  touchX = 0;
+  initialTouchX = 0;
 
   navigationDelay = false;
   pdfLoading = false;
@@ -368,23 +369,11 @@ export class TSqGalleryViewerComponent {
 
     if (!isTouch) {
       this.isMoving = true;
-    } else {
-      this.touchTimeStamp = new Date().getTime();
     }
   }
 
   dragUp() {
     this.isMoving = false;
-  }
-
-  touchEnd(e) {
-    if (Math.abs(this.positionLeft - this.initialLeft) > 100 && (new Date().getTime() - this.touchTimeStamp) < 200) {
-      if (this.positionLeft - this.initialLeft < 0) {
-        this.goFoward();
-      } else {
-        this.goBack();
-      }
-    }
   }
 
   dragMove(e) {
@@ -412,6 +401,26 @@ export class TSqGalleryViewerComponent {
         this.positionLeft = this.initialLeft + this.zoomModifier(-this.getClientY(e) + this.initialY);
         this.positionTop = this.initialTop + this.zoomModifier(this.getClientX(e) - this.initialX);
         break;
+      }
+    }
+  }
+
+  touchStart(e) {
+    this.initialTouchX = this.getClientX(e);
+    this.touchX = this.getClientX(e);
+    this.touchTimeStamp = new Date().getTime();
+  }
+
+  touchMove(e) {
+    this.touchX = this.getClientX(e);
+  }
+
+  touchEnd() {
+    if (Math.abs(this.touchX - this.initialTouchX) > 100 && (new Date().getTime() - this.touchTimeStamp) < 200) {
+      if (this.touchX - this.initialTouchX < 0) {
+        this.goFoward();
+      } else {
+        this.goBack();
       }
     }
   }
@@ -444,8 +453,8 @@ export class TSqGalleryViewerComponent {
     const aTag = document.createElement('a');
     aTag.setAttribute('download', this.selectedFileToDisplay.name);
     aTag.setAttribute('href', this.selectedFileToDisplay.downloadUrl);
-
     aTag.setAttribute('type', 'hidden');
+    aTag.setAttribute('target', '_blank');
 
     document.body.appendChild(aTag);
     aTag.click();
