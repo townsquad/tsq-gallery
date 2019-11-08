@@ -72,6 +72,7 @@
     flex-grow: 1;
     height: 200px;
     margin: 0 10px 10px 10px;
+    overflow: hidden;
   }
 
   .viewer-body {
@@ -92,8 +93,12 @@
         zoom: 0.5;
       }
 
-      @media (max-width: 410px) {
+      @media (max-width: 460px) {
         zoom: 0.4;
+      }
+
+      @media (max-width: 380px) {
+        zoom: 0.3;
       }
     }
 
@@ -109,7 +114,7 @@
 
       .pdf-container,
       img {
-        max-width: calc(100% - 50px);
+        max-width: calc(100% - 120px);
       }
     }
     .nav-action {

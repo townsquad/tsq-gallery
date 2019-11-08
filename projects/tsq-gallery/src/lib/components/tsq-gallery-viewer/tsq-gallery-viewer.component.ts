@@ -416,7 +416,7 @@ export class TSqGalleryViewerComponent {
   }
 
   touchEnd() {
-    if (Math.abs(this.touchX - this.initialTouchX) > 100 && (new Date().getTime() - this.touchTimeStamp) < 200) {
+    if (Math.abs(this.touchX - this.initialTouchX) > 80 && (new Date().getTime() - this.touchTimeStamp) < 250) {
       if (this.touchX - this.initialTouchX < 0) {
         this.goFoward();
       } else {
