@@ -1,37 +1,39 @@
-<div id="tsq-gallery">
-  <div *ngIf="hasMiniPreviews" class="cards-container">
-    <ng-container *ngFor="let file of files; let i = index">
-      <div [ngClass]="containerClass || 'default-gallery-item-container'">
+<div *ngIf="hasMiniPreviews"
+     [ngClass]="containerClass || 'cards-container'"
+     id="TSQ-GALLERY">
+  <ng-container *ngFor="let file of files; let i = index">
+    <div [ngClass]="itemContainerClass || 'default-gallery-item-container'"
+         id="file-{{i}}-container">
 
-        <ng-container *ngIf="file.type !== 'pdf'">
-          <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultImagePreviewTemplate; context: getListItemContext(file, i)"></ng-container>
-        </ng-container>
+      <ng-container *ngIf="file.type !== 'pdf'">
+        <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultImagePreviewTemplate; context: getListItemContext(file, i)"></ng-container>
+      </ng-container>
 
-        <ng-container *ngIf="file.type === 'pdf'">
-          <ng-container *ngTemplateOutlet="pdfPreviewTemplate || defaultPdfPreviewTemplate; context: getListItemContext(file, i)"></ng-container>
-        </ng-container>
+      <ng-container *ngIf="file.type === 'pdf'">
+        <ng-container *ngTemplateOutlet="pdfPreviewTemplate || defaultPdfPreviewTemplate; context: getListItemContext(file, i)"></ng-container>
+      </ng-container>
 
-      </div>
-    </ng-container>
-  </div>
-  <ng-container *ngIf="!hasMiniPreviews">
-    <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultNavDisplayTemplate; context: getListItemContext(null, null)"></ng-container>
+    </div>
   </ng-container>
 </div>
+<ng-container *ngIf="!hasMiniPreviews">
+  <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultNavDisplayTemplate; context: getListItemContext(null, null)"></ng-container>
+</ng-container>
 
 <tsq-gallery-viewer #viewer
-                     [files]="files"
-                     [topViewerClass]="topViewerClass"
-                     [topViewerTemplate]="topViewerTemplate"
-                     [bottomViewerTemplate]="bottomViewerTemplate"
-                     [loadingTemplate]="loadingTemplate"
-                     [showLoading]="showLoading"
-                     [backdropClickClose]="backdropClickClose"
-                     [displayNavigation]="displayNavigation"
-                     [allowDownload]="allowDownload"
-                     [invalidFormatDisplayImage]="invalidFormatDisplayImage"
-                     [displayNavigationIndex]="displayNavigationIndex"></tsq-gallery-viewer>
+                    [files]="files"
+                    [topViewerClass]="topViewerClass"
+                    [topViewerTemplate]="topViewerTemplate"
+                    [bottomViewerTemplate]="bottomViewerTemplate"
+                    [loadingTemplate]="loadingTemplate"
+                    [showLoading]="showLoading"
+                    [backdropClickClose]="backdropClickClose"
+                    [displayNavigation]="displayNavigation"
+                    [allowDownload]="allowDownload"
+                    [invalidFormatDisplayImage]="invalidFormatDisplayImage"
+                    [displayNavigationIndex]="displayNavigationIndex"></tsq-gallery-viewer>
 
+<ng-content></ng-content>
 
 <ng-template #defaultImagePreviewTemplate let-index="index" let-type="type" let-url="url" let-alt="alt" let-fns="fns">
   <div class="default-gallery-item-content"

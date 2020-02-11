@@ -1,50 +1,50 @@
 <ng-container *ngIf="isViewerOpen">
   <div id="tsq-gallery-viewer"
-      tabindex="0"
-      [ngStyle]="{'display': isViewerOpen ? 'flex' : 'none', 'cursor': isMoving? 'grabbing' : 'default'}"
-      (keydown)="onKeyDown($event)"
-      (mouseup)="dragUp()"
-      (mouseleave)="dragUp()"
-      (touchstart)="touchStart($event)"
-      (touchmove)="touchMove($event)"
-      (touchend)="touchEnd()"
-      (click)="backdropClickClose && !isMoving && !showLoading && close()"
-      #backdrop
-      [@fadeInOut]>
+       tabindex="0"
+       [ngStyle]="{'display': isViewerOpen ? 'flex' : 'none', 'cursor': isMoving? 'grabbing' : 'default'}"
+       (keydown)="onKeyDown($event)"
+       (mouseup)="dragUp()"
+       (mouseleave)="dragUp()"
+       (touchstart)="touchStart($event)"
+       (touchmove)="touchMove($event)"
+       (touchend)="touchEnd()"
+       (click)="closeBackdrop()"
+       #backdrop
+       [@fadeInOut]>
 
     <div class="viewer-top" *ngIf="!!selectedFileToDisplay">
       <ng-container *ngTemplateOutlet="topViewerTemplate; context: topViewerContext"></ng-container>
 
       <div [ngClass]="topViewerClass || 'viewer-top-default'"
-          *ngIf="!topViewerTemplate">
+           *ngIf="!topViewerTemplate">
         <div class="title-container"><span>{{selectedFileToDisplay.name}}</span></div>
         <div *ngIf="files.length > 1">{{selectedFileIndex + 1}} / {{files.length}}</div>
         <div>
           <div (click)="$event.stopPropagation(); downloadFile()"
-              *ngIf="allowDownload"
-              class="pointer-cursor action">
+               *ngIf="allowDownload"
+               class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'cloud-download-alt']"></fa-icon>
           </div>
           <div (click)="$event.stopPropagation(); zoomIn()"
-              [class.disabled]="!canZoomIn"
-              class="pointer-cursor action">
+               [class.disabled]="!canZoomIn"
+               class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'search-plus']"></fa-icon>
           </div>
           <div (click)="$event.stopPropagation(); zoomOut()"
-              [class.disabled]="!canZoomOut"
-              class="pointer-cursor action">
+               [class.disabled]="!canZoomOut"
+               class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'search-minus']"></fa-icon>
           </div>
           <div (click)="$event.stopPropagation(); turnLeft()"
-              class="pointer-cursor action">
+               class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon>
           </div>
           <div (click)="$event.stopPropagation(); turnRight()"
-              class="pointer-cursor action">
+               class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'redo-alt']"></fa-icon>
           </div>
           <div (click)="$event.stopPropagation(); close()"
-              class="pointer-cursor action">
+               class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'times-circle']"></fa-icon>
           </div>
         </div>
@@ -63,25 +63,25 @@
           </div>
 
           <img *ngIf="selectedFileToDisplay.type === 'image'"
-              draggable="false"
-              [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : canDrag? 'grab' : 'default'}"
-              [src]="selectedFileToDisplay.displayUrl"
-              [alt]="selectedFileToDisplay.displayAlt"
-              (mousedown)="$event.preventDefault(); canDrag && dragDown($event)"
-              (mousemove)="canDrag && isMoving && dragMove($event)"
-              (touchmove)="dragMove($event)"
-              (touchstart)="dragDown($event, true)"
-              (click)="$event.stopPropagation()">
+               draggable="false"
+               [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : canDrag? 'grab' : 'default'}"
+               [src]="selectedFileToDisplay.displayUrl"
+               [alt]="selectedFileToDisplay.displayAlt"
+               (mousedown)="$event.preventDefault(); canDrag && dragDown($event)"
+               (mousemove)="canDrag && isMoving && dragMove($event)"
+               (touchmove)="dragMove($event)"
+               (touchstart)="dragDown($event, true)"
+               (click)="$event.stopPropagation()">
 
           <div *ngIf="selectedFileToDisplay.type === 'pdf'"
-              class="pdf-container"
-              draggable="false"
-              [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : canDrag? 'grab' : 'default'}"
-              (mousedown)="$event.preventDefault(); canDrag && dragDown($event)"
-              (mousemove)="canDrag && isMoving && dragMove($event)"
-              (touchmove)="dragMove($event)"
-              (touchstart)="dragDown($event, true)"
-              (click)="$event.stopPropagation()">
+               class="pdf-container"
+               draggable="false"
+               [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : canDrag? 'grab' : 'default'}"
+               (mousedown)="$event.preventDefault(); canDrag && dragDown($event)"
+               (mousemove)="canDrag && isMoving && dragMove($event)"
+               (touchmove)="dragMove($event)"
+               (touchstart)="dragDown($event, true)"
+               (click)="$event.stopPropagation()">
 
             <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
                         [original-size]="false"

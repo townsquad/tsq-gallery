@@ -1,4 +1,4 @@
-import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
+import {Component, Input, TemplateRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {
@@ -9,9 +9,10 @@ import {
 import {TSqGalleryViewerComponent} from '../tsq-gallery-viewer/tsq-gallery-viewer.component';
 
 @Component({
-  selector: 'tsq-gallery',
+  selector: 'tsq-gallery, [tsq-gallery]',
   templateUrl: 'main-tsq-gallery.component.html',
   styleUrls: ['main-tsq-gallery.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TSqGalleryComponent {
 
@@ -20,10 +21,15 @@ export class TSqGalleryComponent {
   /** Files to be displayed at the Preview and Viewer. Accepted types: images and pdfs. */
   @Input() files: TSqGalleryFileModel[];
 
-  /** Override the class of the container for each file of the Preview.
+  /** Override the class of the container for the Preview.
    * The class should either have `::ng-deep` (not recommended) or be global.
    */
   @Input() containerClass: string;
+
+  /** Override the class of the container for each file of the Preview.
+   * The class should either have `::ng-deep` (not recommended) or be global.
+   */
+  @Input() itemContainerClass: string;
 
   /** Override the class of the header of the Viewer. The class should either have `::ng-deep` (not recommended) or be global. */
   @Input() topViewerClass: string;

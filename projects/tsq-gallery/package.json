@@ -43,7 +43,9 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run-local": "ng build tsq-gallery && ng serve",
+    "publish": "ng build tsq-gallery && cd dist/tsq-gallery && npm publish --access public"
   },
   "author": "kousenlsn"
 }
