@@ -8,7 +8,7 @@
        (touchstart)="touchStart($event)"
        (touchmove)="touchMove($event)"
        (touchend)="touchEnd()"
-       (click)="$event.stopPropagation(); backdropClickClose && !isMoving && !showLoading && close()"
+       (click)="closeBackdrop()"
        #backdrop
        [@fadeInOut]>
 

@@ -20,7 +20,8 @@ For demo, check the Github page.
 
 ## Options
 
-- **containerClass** - Override the class of the container for each file of the Preview. The class should either have `::ng-deep` (not recommended) or be global.
+- **containerClass** - Override the class of the container for the Preview. The class should either have `::ng-deep` (not recommended) or be global.
+- **itemContainerClass** - Override the class of the container for each image of the Preview. The class should either have `::ng-deep` (not recommended) or be global.
 - **imagePreviewTemplate** - Override the inner content for image type files on the Preview. Check `TSqGalleryListItemTemplateRefContext` for variables access.
 - **pdfPreviewTemplate** - Override the inner content for pdf type files on the Preview. This can be used if you want to hide the file. Check `TSqGalleryListItemTemplateRefContext` for variables access.
 - **hasMiniPreviews** - Toggle display the Preview or a single access action button. Override `imagePreviewTemplate` to edit it in case of `false`.

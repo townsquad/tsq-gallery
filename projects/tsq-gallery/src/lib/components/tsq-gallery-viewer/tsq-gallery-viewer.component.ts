@@ -482,4 +482,12 @@ export class TSqGalleryViewerComponent {
       setTimeout(() => this.navigationDelay = false, 250);
     }
   }
+
+  closeBackdrop($event: TouchEvent | MouseEvent) {
+    $event.stopPropagation();
+
+    if (this.backdropClickClose && !this.isMoving && !this.showLoading) {
+      close();
+    }
+  }
 }

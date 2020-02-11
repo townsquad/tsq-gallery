@@ -21,9 +21,9 @@ export class TSqGalleryComponent {
   /** Files to be displayed at the Preview and Viewer. Accepted types: images and pdfs. */
   @Input() files: TSqGalleryFileModel[];
 
-    /** Override the class of the container for each file of the Preview.
-     * The class should either have `::ng-deep` (not recommended) or be global.
-     */
+  /** Override the class of the container for the Preview.
+   * The class should either have `::ng-deep` (not recommended) or be global.
+   */
   @Input() containerClass: string;
 
   /** Override the class of the container for each file of the Preview.
