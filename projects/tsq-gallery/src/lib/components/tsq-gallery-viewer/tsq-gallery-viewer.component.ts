@@ -8,16 +8,7 @@ import {
   TSqGalleryBottomViewerTemplateRefContext,
   TSqGalleryTopViewerTemplateRefContext
 } from '../../models/tsq-gallery-template-ref-context.model';
-
-enum SupportedKeys {
-  ArrowRight = 'ArrowRight',
-  ArrowLeft = 'ArrowLeft',
-  ArrowUp = 'ArrowUp',
-  ArrowDown = 'ArrowDown',
-  Esc = 'Escape',
-  Minus = '-',
-  Plus = '+',
-}
+import {SupportedKeys, SupportedScrollDirection} from './../../models/tsq-gallery-supported-keys';
 
 @Component({
   selector: 'tsq-gallery-viewer',
@@ -26,19 +17,19 @@ enum SupportedKeys {
   animations: [galleryAnimations],
 })
 export class TSqGalleryViewerComponent {
+  @ViewChild('backdrop', {static: false}) backdropRef: ElementRef;
 
   @Input()
   set files(files: TSqGalleryFileModel[]) {
+    this.galleryFiles = files;
+
     if (files.length === 0) {
       this.close();
     }
     if (this.selectedFileIndex > files.length - 1) {
-      this.selectedFileIndex = files.length - 1;
+      this.setCurrentFile(files.length - 1);
     }
-
-    this.readFiles = files;
   }
-  get files() { return this.readFiles; }
 
   @Input() topViewerClass: string;
   @Input() topViewerTemplate: TemplateRef<TSqGalleryTopViewerTemplateRefContext>;
@@ -60,98 +51,36 @@ export class TSqGalleryViewerComponent {
   touchTimeStamp = 0;
   touchX = 0;
   initialTouchX = 0;
-
-  navigationDelay = false;
-  pdfLoading = false;
-  keypress = false;
-  isMoving = false;
   imageRotation = 0;
   imageZoom = 1;
+
+  canGoForward = false;
+  canGoBack = false;
+  canZoomIn = false;
+  canZoomOut = false;
+  canMove = false;
+  isViewerOpen = false;
+  navigationDelay = false;
+  pdfLoading = false;
+  isMoving = false;
+  galleryFiles: TSqGalleryFileModel[];
   selectedFileIndex: number;
+  selectedFileToDisplay: TSqGalleryFileModel;
+  topViewerContext: TSqGalleryTopViewerTemplateRefContext;
+  bottomViewerContext: TSqGalleryBottomViewerTemplateRefContext;
   scrollListener: () => void;
 
-  @ViewChild('backdrop', {static: false}) backdropRef: ElementRef;
-
-  private readFiles: TSqGalleryFileModel[];
-  private isOpen: boolean;
-
-  constructor(private renderer: Renderer2) { }
-
-  contextClose = () => {
-    this.close();
-  }
-
-  get isViewerOpen(): boolean {
-    return this.isOpen;
-  }
-
-  get selectedFileToDisplay(): TSqGalleryFileModel {
-    const file = this.files && this.files[!!this.selectedFileIndex || this.selectedFileIndex === 0 ? this.selectedFileIndex : 0];
-
-    return file;
-  }
-
-  get topViewerContext(): TSqGalleryTopViewerTemplateRefContext {
-    return {
-      file: this.selectedFileToDisplay,
-      index: this.selectedFileIndex,
-      fns: {
-        close: this.contextClose,
-      },
-    };
-  }
-
-  get bottomViewerContext(): TSqGalleryBottomViewerTemplateRefContext {
-    return {
-      file: this.selectedFileToDisplay,
-      index: this.selectedFileIndex,
-    };
-  }
-
-  get canDrag(): boolean {
-    return this.imageZoom > 1.0;
-  }
-
-  get canZoomIn(): boolean {
-    return this.imageZoom < 1.8;
-  }
-
-  get canZoomOut(): boolean {
-    return this.imageZoom > 0.5;
-  }
-
-  get canGoFoward(): boolean {
-    return this.selectedFileIndex < this.files.length - 1 && !this.navigationDelay;
-  }
-
-  get canGoBack(): boolean {
-    return this.selectedFileIndex > 0 && !this.navigationDelay;
-  }
-
-  resetPosition(resetRotation: boolean = true) {
-    this.imageZoom = 1;
-    this.initialX = 0;
-    this.initialY = 0;
-    this.initialLeft = 0;
-    this.initialTop = 0;
-    this.positionLeft = 0;
-    this.positionTop = 0;
-
-    if (resetRotation) {
-      this.imageRotation = 0;
-    }
-  }
+  constructor(private renderer: Renderer2) {}
 
   open(index?: number) {
-    this.isOpen = true;
-    this.selectedFileIndex = index || 0;
+    this.isViewerOpen = true;
+    this.setCurrentFile(index);
+
     this.renderer.setStyle(document.body, 'overflow', 'hidden');
     setTimeout(() => {
       if (!!this.backdropRef) {
         this.backdropRef.nativeElement.focus();
       }
-
-      this.resetPosition();
     }, 10);
 
     const throttleFunc = throttle(this.onWindowScroll, 1);
@@ -160,285 +89,51 @@ export class TSqGalleryViewerComponent {
     this.renderer.setStyle(document.body, 'overscroll-behavior-x', 'none');
   }
 
-  close() {
-    this.resetPosition();
+  pdfOpenOnProgress(progressData: PDFProgressData) {
+    this.pdfLoading = progressData.loaded < progressData.total;
+  }
 
-    this.isOpen = false;
-    this.selectedFileIndex = undefined;
+  close() {
+    this.isViewerOpen = false;
+    this.setCurrentFile(undefined);
+
     this.renderer.removeStyle(document.body, 'overflow');
 
     if (!!this.scrollListener) {
       this.scrollListener();
     }
 
-    this.renderer.removeClass(document.body, 'overscroll-behavior-x');
+    this.renderer.removeStyle(document.body, 'overscroll-behavior-x');
   }
 
-  onWindowScroll = ($event: WheelEvent) => {
-    if ($event.ctrlKey) {
-      if (!window['chrome']) {
-        const zoomValue = $event.deltaY * 0.01;
+  goForward(addDelay = false) {
+    if (this.canGoForward && !this.navigationDelay) {
+      this.setCurrentFile(this.selectedFileIndex + 1);
 
-        if (zoomValue > 0 && this.canZoomOut) {
-          this.imageZoom -= zoomValue;
-          this.adjustHorizontalPositionOnZoom();
-        } else if (zoomValue < 0 && this.canZoomIn) {
-          this.imageZoom -= zoomValue;
-          this.adjustHorizontalPositionOnZoom();
-        }
-      }
-    } else if (Math.abs($event.deltaX) > 0 && Math.abs($event.deltaX) > Math.abs($event.deltaY)) {
-      if (this.canDrag) {
-        switch (this.imageRotation % 360) {
-          case 0:
-          case -360: {
-            this.positionLeft -= this.zoomModifier($event.deltaX * 0.7);
-            break;
-          }
-          case 90:
-          case -270: {
-            this.positionTop += this.zoomModifier($event.deltaX * 0.7);
-            break;
-          }
-          case 180:
-          case -180: {
-            this.positionLeft += this.zoomModifier($event.deltaX * 0.7);
-            break;
-          }
-          case 270:
-          case -90: {
-            this.positionTop -= this.zoomModifier($event.deltaX * 0.7);
-            break;
-          }
-        }
-      } else {
-        if ($event.deltaX > 15) {
-          this.goFoward();
-        } else if ($event.deltaX < -15) {
-          this.goBack();
-        }
-      }
-    } else if (Math.abs($event.deltaY) > 0) {
-      switch (this.imageRotation % 360) {
-        case 0:
-        case -360: {
-          this.positionTop -= this.zoomModifier($event.deltaY * 0.7);
-          break;
-        }
-        case 90:
-        case -270: {
-          this.positionLeft -= this.zoomModifier($event.deltaY * 0.7);
-          break;
-        }
-        case 180:
-        case -180: {
-          this.positionTop += this.zoomModifier($event.deltaY * 0.7);
-          break;
-        }
-        case 270:
-        case -90: {
-          this.positionLeft += this.zoomModifier($event.deltaY * 0.7);
-          break;
-        }
+      if (addDelay) {
+        this.navigationDelay = true;
+        setTimeout(() => this.navigationDelay = false, 150);
       }
     }
   }
 
-  onProgress(progressData: PDFProgressData) {
-    this.pdfLoading = progressData.loaded < progressData.total;
-  }
+  goBack(addDelay = false) {
+    if (this.canGoBack && !this.navigationDelay) {
+      this.setCurrentFile(this.selectedFileIndex - 1);
 
-  onKeyDown(keyboardEvent: KeyboardEvent) {
-    const key = keyboardEvent.key;
-
-    switch (key) {
-      case SupportedKeys.ArrowLeft: {
-        this.goBack();
-        break;
-      }
-      case SupportedKeys.ArrowRight: {
-        this.goFoward();
-        break;
-      }
-      case SupportedKeys.Esc: {
-        if (!this.showLoading) {
-          this.close();
-        }
-        break;
-      }
-      case SupportedKeys.ArrowDown : {
-        switch (this.imageRotation % 360) {
-          case 0:
-          case -360: {
-            this.positionTop -= this.zoomModifier(40);
-            break;
-          }
-          case 90:
-          case -270: {
-            this.positionLeft -= this.zoomModifier(40);
-            break;
-          }
-          case 180:
-          case -180: {
-            this.positionTop += this.zoomModifier(40);
-            break;
-          }
-          case 270:
-          case -90: {
-            this.positionLeft += this.zoomModifier(40);
-            break;
-          }
-        }
-        break;
-      }
-      case SupportedKeys.ArrowUp : {
-        switch (this.imageRotation % 360) {
-          case 0:
-          case -360: {
-            this.positionTop += this.zoomModifier(40);
-            break;
-          }
-          case 90:
-          case -270: {
-            this.positionLeft += this.zoomModifier(40);
-            break;
-          }
-          case 180:
-          case -180: {
-            this.positionTop -= this.zoomModifier(40);
-            break;
-          }
-          case 270:
-          case -90: {
-            this.positionLeft -= this.zoomModifier(40);
-            break;
-          }
-        }
-        break;
-      }
-      case SupportedKeys.Minus : {
-        if (this.canZoomOut) {
-          this.zoomOut();
-        }
-        break;
-      }
-      case SupportedKeys.Plus : {
-        if (this.canZoomIn) {
-          this.zoomIn();
-        }
-        break;
+      if (addDelay) {
+        this.navigationDelay = true;
+        setTimeout(() => this.navigationDelay = false, 150);
       }
     }
   }
 
-  zoomIn() {
-    if (this.canZoomIn) {
-      this.imageZoom += 0.1;
+  closeBackdrop($event: TouchEvent | MouseEvent) {
+    $event.stopPropagation();
+
+    if (this.backdropClickClose && !this.isMoving && !this.showLoading) {
+      this.close();
     }
-  }
-
-  zoomOut() {
-    if (this.canZoomOut) {
-      this.imageZoom -= 0.1;
-
-      this.adjustHorizontalPositionOnZoom();
-    }
-  }
-
-  adjustHorizontalPositionOnZoom() {
-    switch (this.imageRotation % 360) {
-      case 0:
-      case 180:
-      case -180:
-      case -360: {
-        this.positionLeft = this.imageZoom > 1.0 ? this.positionLeft / 2 : 0;
-        break;
-      }
-      default: {
-        this.positionTop = this.imageZoom > 1.0 ? this.positionTop / 2 : 0;
-        break;
-      }
-    }
-  }
-
-  dragDown(e, isTouch = false) {
-    this.initialX = this.getClientX(e);
-    this.initialY = this.getClientY(e);
-    this.initialLeft = this.positionLeft;
-    this.initialTop = this.positionTop;
-
-    if (!isTouch) {
-      this.isMoving = true;
-    }
-  }
-
-  dragUp() {
-    this.isMoving = false;
-  }
-
-  dragMove(e) {
-    switch (this.imageRotation % 360) {
-      case 0:
-      case -360: {
-        this.positionLeft = this.initialLeft + this.zoomModifier(this.getClientX(e) - this.initialX);
-        this.positionTop = this.initialTop + this.zoomModifier(this.getClientY(e) - this.initialY);
-        break;
-      }
-      case 90:
-      case -270: {
-        this.positionLeft = this.initialLeft + this.zoomModifier(this.getClientY(e) - this.initialY);
-        this.positionTop = this.initialTop + this.zoomModifier(-this.getClientX(e) + this.initialX);
-        break;
-      }
-      case 180:
-      case -180: {
-        this.positionLeft = this.initialLeft + this.zoomModifier(-this.getClientX(e) + this.initialX);
-        this.positionTop = this.initialTop + this.zoomModifier(-this.getClientY(e) + this.initialY);
-        break;
-      }
-      case 270:
-      case -90: {
-        this.positionLeft = this.initialLeft + this.zoomModifier(-this.getClientY(e) + this.initialY);
-        this.positionTop = this.initialTop + this.zoomModifier(this.getClientX(e) - this.initialX);
-        break;
-      }
-    }
-  }
-
-  touchStart(e) {
-    this.initialTouchX = this.getClientX(e);
-    this.touchX = this.getClientX(e);
-    this.touchTimeStamp = new Date().getTime();
-  }
-
-  touchMove(e) {
-    this.touchX = this.getClientX(e);
-  }
-
-  touchEnd() {
-    if (Math.abs(this.touchX - this.initialTouchX) > 80 && (new Date().getTime() - this.touchTimeStamp) < 250) {
-      if (this.touchX - this.initialTouchX < 0) {
-        this.goFoward();
-      } else {
-        this.goBack();
-      }
-    }
-  }
-
-  getClientX(e: TouchEvent | MouseEvent): number {
-    return e instanceof MouseEvent ?
-      e.clientX :
-      e.touches[0].pageX;
-  }
-
-  getClientY(e: TouchEvent | MouseEvent): number {
-    return e instanceof MouseEvent ?
-      e.clientY :
-      e.touches[0].pageY;
-  }
-
-  zoomModifier(value: number) {
-    return value * ((2 - this.imageZoom) * 1.1);
   }
 
   turnLeft() {
@@ -461,33 +156,249 @@ export class TSqGalleryViewerComponent {
     aTag.remove();
   }
 
-  goFoward() {
-    if (this.canGoFoward) {
-      this.resetPosition();
-      this.selectedFileIndex++;
-      this.pdfLoading = false;
-
-      this.navigationDelay = true;
-      setTimeout(() => this.navigationDelay = false, 250);
+  zoomIn() {
+    if (this.canZoomIn) {
+      this.setImageZoom(0.1);
     }
   }
 
-  goBack() {
-    if (this.canGoBack) {
-      this.resetPosition();
-      this.selectedFileIndex--;
-      this.pdfLoading = false;
-
-      this.navigationDelay = true;
-      setTimeout(() => this.navigationDelay = false, 250);
+  zoomOut() {
+    if (this.canZoomOut) {
+      this.setImageZoom(-0.1);
+      this.adjustHorizontalPositionOnZoom();
     }
   }
 
-  closeBackdrop($event: TouchEvent | MouseEvent) {
-    $event.stopPropagation();
+  onWindowScroll = ($event: WheelEvent) => {
+    if ($event.ctrlKey) {
+      // tslint:disable-next-line: no-string-literal
+      if (!window['chrome']) {
+        const zoomValue = $event.deltaY * 0.01;
 
-    if (this.backdropClickClose && !this.isMoving && !this.showLoading) {
-      close();
+        if ((zoomValue > 0 && this.canZoomOut) || (zoomValue < 0 && this.canZoomIn)) {
+          this.setImageZoom(-zoomValue);
+          this.adjustHorizontalPositionOnZoom();
+        }
+      }
+    } else if (Math.abs($event.deltaX) > 0 && Math.abs($event.deltaX) > Math.abs($event.deltaY)) {
+      if (this.canMove) {
+        const direction = $event.deltaX > 0 ? SupportedScrollDirection.RIGHT : SupportedScrollDirection.LEFT;
+
+        this.moveImageTo(direction, Math.abs($event.deltaX * 0.7));
+      } else {
+        if ($event.deltaX > 15) {
+          this.goForward(true);
+        } else if ($event.deltaX < -15) {
+          this.goBack(true);
+        }
+      }
+    } else if (Math.abs($event.deltaY) > 0) {
+      const direction = $event.deltaY > 0 ? SupportedScrollDirection.DOWN : SupportedScrollDirection.UP;
+
+      this.moveImageTo(direction, Math.abs($event.deltaY * 0.7));
     }
+  }
+
+  onKeyDown(keyboardEvent: KeyboardEvent) {
+    const key = keyboardEvent.key;
+
+    switch (key) {
+      case SupportedKeys.ArrowLeft: {
+        this.goBack();
+        break;
+      }
+      case SupportedKeys.ArrowRight: {
+        this.goForward();
+        break;
+      }
+      case SupportedKeys.Esc: {
+        if (!this.showLoading) {
+          this.close();
+        }
+        break;
+      }
+      case SupportedKeys.ArrowDown : {
+        this.moveImageTo(SupportedScrollDirection.DOWN, 40);
+        break;
+      }
+      case SupportedKeys.ArrowUp : {
+        this.moveImageTo(SupportedScrollDirection.UP, 40);
+        break;
+      }
+      case SupportedKeys.Minus : {
+        if (this.canZoomOut) {
+          this.zoomOut();
+        }
+        break;
+      }
+      case SupportedKeys.Plus : {
+        if (this.canZoomIn) {
+          this.zoomIn();
+        }
+        break;
+      }
+    }
+  }
+
+  dragDown(e: TouchEvent | MouseEvent, isTouch = false) {
+    this.initialX = this.getClientX(e);
+    this.initialY = this.getClientY(e);
+    this.initialLeft = this.positionLeft;
+    this.initialTop = this.positionTop;
+
+    if (!isTouch) {
+      this.isMoving = true;
+    }
+  }
+
+  dragUp() {
+    this.isMoving = false;
+  }
+
+  dragMove(e: TouchEvent | MouseEvent) {
+    switch (this.imageRotation % 360) {
+      case 0:
+      case -360: {
+        this.positionLeft = this.initialLeft + this.addZoomModifier(this.getClientX(e) - this.initialX);
+        this.positionTop = this.initialTop + this.addZoomModifier(this.getClientY(e) - this.initialY);
+        break;
+      }
+      case 90:
+      case -270: {
+        this.positionLeft = this.initialLeft + this.addZoomModifier(this.getClientY(e) - this.initialY);
+        this.positionTop = this.initialTop + this.addZoomModifier(-this.getClientX(e) + this.initialX);
+        break;
+      }
+      case 180:
+      case -180: {
+        this.positionLeft = this.initialLeft + this.addZoomModifier(-this.getClientX(e) + this.initialX);
+        this.positionTop = this.initialTop + this.addZoomModifier(-this.getClientY(e) + this.initialY);
+        break;
+      }
+      case 270:
+      case -90: {
+        this.positionLeft = this.initialLeft + this.addZoomModifier(-this.getClientY(e) + this.initialY);
+        this.positionTop = this.initialTop + this.addZoomModifier(this.getClientX(e) - this.initialX);
+        break;
+      }
+    }
+  }
+
+  touchStart(e: TouchEvent | MouseEvent) {
+    this.initialTouchX = this.getClientX(e);
+    this.touchX = this.getClientX(e);
+    this.touchTimeStamp = new Date().getTime();
+  }
+
+  touchMove(e: TouchEvent | MouseEvent) {
+    this.touchX = this.getClientX(e);
+  }
+
+  touchEnd() {
+    if (Math.abs(this.touchX - this.initialTouchX) > 80 && (new Date().getTime() - this.touchTimeStamp) < 250) {
+      if (this.touchX - this.initialTouchX < 0) {
+        this.goForward();
+      } else {
+        this.goBack();
+      }
+    }
+  }
+
+  private getClientX(e: TouchEvent | MouseEvent): number {
+    return e instanceof MouseEvent ? e.clientX : e.touches[0].pageX;
+  }
+
+  private getClientY(e: TouchEvent | MouseEvent): number {
+    return e instanceof MouseEvent ? e.clientY : e.touches[0].pageY;
+  }
+
+  private addZoomModifier(value: number) {
+    return value * ((2 - this.imageZoom) * 1.1);
+  }
+
+  private setImageZoom(distance: number, replace = false) {
+    this.imageZoom = replace ? distance : this.imageZoom + distance;
+
+    this.canMove = this.imageZoom > 1.0;
+    this.canZoomIn = this.imageZoom < 1.8;
+    this.canZoomOut = this.imageZoom > 0.5;
+  }
+
+  private adjustHorizontalPositionOnZoom() {
+    switch (this.imageRotation % 360) {
+      case 0:
+      case 180:
+      case -180:
+      case -360: {
+        this.positionLeft = this.imageZoom > 1.0 ? this.positionLeft / 2 : 0;
+        break;
+      }
+      default: {
+        this.positionTop = this.imageZoom > 1.0 ? this.positionTop / 2 : 0;
+        break;
+      }
+    }
+  }
+
+  private moveImageTo(direction: SupportedScrollDirection, distance: number) {
+    const directionMod = direction === SupportedScrollDirection.UP || direction === SupportedScrollDirection.LEFT ? 1 : -1;
+    const nextDistance = this.addZoomModifier(distance);
+    const imageRotationMod = direction === SupportedScrollDirection.LEFT || direction === SupportedScrollDirection.RIGHT ? 90 : 0;
+
+    switch ((this.imageRotation + imageRotationMod) % 360) {
+      case 0:
+      case -360: {
+        this.positionTop += directionMod * nextDistance;
+        break;
+      }
+      case 90:
+      case -270: {
+        this.positionLeft += directionMod * nextDistance;
+        break;
+      }
+      case 180:
+      case -180: {
+        this.positionTop += -directionMod * nextDistance;
+        break;
+      }
+      case 270:
+      case -90: {
+        this.positionLeft += -directionMod * nextDistance;
+        break;
+      }
+    }
+  }
+
+  private resetImagePosition(resetRotation: boolean = true) {
+    this.setImageZoom(1, true);
+    this.initialX = this.initialY = this.initialLeft = this.initialTop = this.positionLeft = this.positionTop = 0;
+
+    if (resetRotation) {
+      this.imageRotation = 0;
+    }
+  }
+
+  private setCurrentFile(index: number) {
+    this.resetImagePosition();
+
+    this.pdfLoading = false;
+    this.selectedFileIndex = index;
+    this.selectedFileToDisplay = !!this.galleryFiles && this.galleryFiles[index || 0];
+
+    this.canGoBack = index > 0;
+    this.canGoForward = index < this.galleryFiles.length - 1;
+
+    this.topViewerContext = {
+      file: this.selectedFileToDisplay,
+      index: this.selectedFileIndex,
+      fns: {
+        close: this.close,
+      },
+    };
+
+    this.bottomViewerContext = {
+      file: this.selectedFileToDisplay,
+      index: this.selectedFileIndex,
+    };
   }
 }

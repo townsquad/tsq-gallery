@@ -1,6 +1,6 @@
 {
   "name": "@townsquad/tsq-gallery",
-  "version": "1.1.14",
+  "version": "1.1.19",
   "description": "Angular file preview and carrousel viewer for images and pdfs.",
   "repository": {
     "type": "git",
@@ -43,9 +43,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "run-local": "ng build tsq-gallery && ng serve",
-    "publish": "ng build tsq-gallery && cd dist/tsq-gallery && npm publish --access public"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "kousenlsn"
 }

@@ -17,8 +17,10 @@
   </ng-container>
 </div>
 <ng-container *ngIf="!hasMiniPreviews">
-  <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultNavDisplayTemplate; context: getListItemContext(null, null)"></ng-container>
+  <ng-container *ngTemplateOutlet="imagePreviewTemplate || defaultSingleNavDisplayTemplate; context: getListItemContext(null, null)"></ng-container>
 </ng-container>
+
+
 
 <tsq-gallery-viewer #viewer
                     [files]="files"
@@ -34,6 +36,8 @@
                     [displayNavigationIndex]="displayNavigationIndex"></tsq-gallery-viewer>
 
 <ng-content></ng-content>
+
+
 
 <ng-template #defaultImagePreviewTemplate let-index="index" let-type="type" let-url="url" let-alt="alt" let-fns="fns">
   <div class="default-gallery-item-content"
@@ -69,6 +73,6 @@
               [render-text]="false"></pdf-viewer>
 </ng-template>
 
-<ng-template #defaultNavDisplayTemplate let-fns="fns">
+<ng-template #defaultSingleNavDisplayTemplate let-fns="fns">
   <button (click)="fns.open()">Files</button>
 </ng-template>

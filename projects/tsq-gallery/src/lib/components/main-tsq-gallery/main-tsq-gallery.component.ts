@@ -12,7 +12,6 @@ import {TSqGalleryViewerComponent} from '../tsq-gallery-viewer/tsq-gallery-viewe
   selector: 'tsq-gallery, [tsq-gallery]',
   templateUrl: 'main-tsq-gallery.component.html',
   styleUrls: ['main-tsq-gallery.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TSqGalleryComponent {
 
