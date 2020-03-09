@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 
 import {of, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {takeUntil, delay} from 'rxjs/operators';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {
@@ -85,11 +85,11 @@ export class TSqGalleryComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     if (this.displayInline && this.keepOpen) {
       of(this.files)
-        .pipe(takeUntil(this.componentDestroyed$))
+        .pipe(takeUntil(this.componentDestroyed$), delay(10))
         .subscribe((files) => {
           if (!!files && files.length > 0) {
             if (!this.viewer.isViewerOpen) {
-              setTimeout(() => this.contextOpen(), 1000);
+              this.contextOpen();
             }
           }
         });

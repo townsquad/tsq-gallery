@@ -191,7 +191,6 @@ export class TSqGalleryViewerComponent {
     $event.preventDefault();
 
     if ($event.ctrlKey) {
-      // tslint:disable-next-line: no-string-literal
       if (!window['chrome']) {
         const zoomValue = $event.deltaY * 0.01;
 
