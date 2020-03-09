@@ -44,7 +44,7 @@
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'redo-alt']"></fa-icon>
           </div>
-          <div (click)="$event.stopPropagation(); expanded = !expanded"
+          <div (click)="$event.stopPropagation(); expand()"
                 *ngIf="displayInline"
                 class="pointer-cursor action">
           <fa-icon [icon]="['fas', 'expand']"></fa-icon>

@@ -79,6 +79,10 @@ export class TSqGalleryViewerComponent {
     this.isViewerOpen = true;
     this.setCurrentFile(index);
 
+    if (!this.displayInline) {
+      this.renderer.setStyle(document.body, 'overflow', 'hidden');
+    }
+
     setTimeout(() => {
       if (!!this.backdropRef) {
         this.backdropRef.nativeElement.focus();
@@ -97,8 +101,22 @@ export class TSqGalleryViewerComponent {
     this.isViewerOpen = false;
     this.setCurrentFile(undefined);
 
+    if (!this.displayInline) {
+      this.renderer.removeStyle(document.body, 'overflow');
+    }
+
     if (!!this.scrollListener) {
       this.scrollListener();
+    }
+  }
+
+  expand() {
+    this.expanded = !this.expanded;
+
+    if (this.expanded) {
+      this.renderer.setStyle(document.body, 'overflow', 'hidden');
+    } else {
+      this.renderer.removeStyle(document.body, 'overflow');
     }
   }
 
@@ -131,7 +149,7 @@ export class TSqGalleryViewerComponent {
       if (!this.keepOpen) {
         this.close();
       } else if (this.expanded) {
-        this.expanded = false;
+        this.expand();
       }
     }
   }
@@ -215,7 +233,7 @@ export class TSqGalleryViewerComponent {
       }
       case SupportedKeys.Esc: {
         if (this.expanded) {
-          this.expanded = false;
+          this.expand();
         } else if (!this.showLoading && !this.keepOpen) {
           this.close();
         }
