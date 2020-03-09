@@ -9,6 +9,7 @@ import {
   TSqGalleryTopViewerTemplateRefContext
 } from '../../models/tsq-gallery-template-ref-context.model';
 import {SupportedKeys, SupportedScrollDirection} from './../../models/tsq-gallery-supported-keys';
+import {TSqGalleryFilePositioningActions} from '../../models/tsq-gallery-file-positioning-actions.model';
 
 @Component({
   selector: 'tsq-gallery-viewer',
@@ -22,7 +23,6 @@ export class TSqGalleryViewerComponent {
   @Input()
   set files(files: TSqGalleryFileModel[]) {
     this.galleryFiles = files;
-
     if (files.length === 0) {
       this.close();
     }
@@ -44,28 +44,18 @@ export class TSqGalleryViewerComponent {
   @Input() displayInline: boolean;
   @Input() keepOpen: boolean;
 
-  initialX = 0;
-  initialY = 0;
-  initialLeft = 0;
-  initialTop = 0;
-  positionLeft = 0;
-  positionTop = 0;
   touchTimeStamp = 0;
   touchX = 0;
   initialTouchX = 0;
-  imageRotation = 0;
-  imageZoom = 1;
-
   canGoForward = false;
   canGoBack = false;
-  canZoomIn = false;
-  canZoomOut = false;
-  canMove = false;
   isViewerOpen = false;
   expanded = false;
   navigationDelay = false;
   pdfLoading = false;
   isMoving = false;
+  galleryFilePositioning = new TSqGalleryFilePositioningActions();
+
   galleryFiles: TSqGalleryFileModel[];
   selectedFileIndex: number;
   selectedFileToDisplay: TSqGalleryFileModel;
@@ -142,26 +132,6 @@ export class TSqGalleryViewerComponent {
     }
   }
 
-  closeBackdrop($event: TouchEvent | MouseEvent) {
-    $event.stopPropagation();
-
-    if (this.backdropClickClose && !this.isMoving && !this.showLoading) {
-      if (!this.keepOpen) {
-        this.close();
-      } else if (this.expanded) {
-        this.expand();
-      }
-    }
-  }
-
-  turnLeft() {
-    this.imageRotation -= 90;
-  }
-
-  turnRight() {
-    this.imageRotation += 90;
-  }
-
   downloadFile() {
     const aTag = document.createElement('a');
     aTag.setAttribute('download', this.selectedFileToDisplay.name);
@@ -174,16 +144,15 @@ export class TSqGalleryViewerComponent {
     aTag.remove();
   }
 
-  zoomIn() {
-    if (this.canZoomIn) {
-      this.setImageZoom(0.1);
-    }
-  }
+  closeBackdrop($event: TouchEvent | MouseEvent) {
+    $event.stopPropagation();
 
-  zoomOut() {
-    if (this.canZoomOut) {
-      this.setImageZoom(-0.1);
-      this.adjustHorizontalPositionOnZoom();
+    if (this.backdropClickClose && !this.isMoving && !this.showLoading) {
+      if (!this.keepOpen) {
+        this.close();
+      } else if (this.expanded) {
+        this.expand();
+      }
     }
   }
 
@@ -194,16 +163,16 @@ export class TSqGalleryViewerComponent {
       if (!window['chrome']) {
         const zoomValue = $event.deltaY * 0.01;
 
-        if ((zoomValue > 0 && this.canZoomOut) || (zoomValue < 0 && this.canZoomIn)) {
-          this.setImageZoom(-zoomValue);
-          this.adjustHorizontalPositionOnZoom();
+        if ((zoomValue > 0 && this.galleryFilePositioning.canZoomOut) || (zoomValue < 0 && this.galleryFilePositioning.canZoomIn)) {
+          this.galleryFilePositioning.setImageZoom(-zoomValue);
+          this.galleryFilePositioning.adjustHorizontalPositionOnZoom();
         }
       }
     } else if (Math.abs($event.deltaX) > 0 && Math.abs($event.deltaX) > Math.abs($event.deltaY)) {
-      if (this.canMove) {
+      if (this.galleryFilePositioning.canMove) {
         const direction = $event.deltaX > 0 ? SupportedScrollDirection.RIGHT : SupportedScrollDirection.LEFT;
 
-        this.moveImageTo(direction, Math.abs($event.deltaX * 0.7));
+        this.galleryFilePositioning.moveImageTo(direction, Math.abs($event.deltaX * 0.7));
       } else {
         if ($event.deltaX > 15) {
           this.goForward(true);
@@ -214,7 +183,7 @@ export class TSqGalleryViewerComponent {
     } else if (Math.abs($event.deltaY) > 0) {
       const direction = $event.deltaY > 0 ? SupportedScrollDirection.DOWN : SupportedScrollDirection.UP;
 
-      this.moveImageTo(direction, Math.abs($event.deltaY * 0.7));
+      this.galleryFilePositioning.moveImageTo(direction, Math.abs($event.deltaY * 0.7));
     }
   }
 
@@ -239,22 +208,22 @@ export class TSqGalleryViewerComponent {
         break;
       }
       case SupportedKeys.ArrowDown : {
-        this.moveImageTo(SupportedScrollDirection.DOWN, 40);
+        this.galleryFilePositioning.moveImageTo(SupportedScrollDirection.DOWN, 40);
         break;
       }
       case SupportedKeys.ArrowUp : {
-        this.moveImageTo(SupportedScrollDirection.UP, 40);
+        this.galleryFilePositioning.moveImageTo(SupportedScrollDirection.UP, 40);
         break;
       }
       case SupportedKeys.Minus : {
-        if (this.canZoomOut) {
-          this.zoomOut();
+        if (this.galleryFilePositioning.canZoomOut) {
+          this.galleryFilePositioning.zoomOut();
         }
         break;
       }
       case SupportedKeys.Plus : {
-        if (this.canZoomIn) {
-          this.zoomIn();
+        if (this.galleryFilePositioning.canZoomIn) {
+          this.galleryFilePositioning.zoomIn();
         }
         break;
       }
@@ -262,11 +231,7 @@ export class TSqGalleryViewerComponent {
   }
 
   dragDown(e: TouchEvent | MouseEvent, isTouch = false) {
-    this.initialX = this.getClientX(e);
-    this.initialY = this.getClientY(e);
-    this.initialLeft = this.positionLeft;
-    this.initialTop = this.positionTop;
-
+    this.galleryFilePositioning.setRelativePosition(this.getClientX(e), this.getClientY(e));
     if (!isTouch) {
       this.isMoving = true;
     }
@@ -277,32 +242,7 @@ export class TSqGalleryViewerComponent {
   }
 
   dragMove(e: TouchEvent | MouseEvent) {
-    switch (this.imageRotation % 360) {
-      case 0:
-      case -360: {
-        this.positionLeft = this.initialLeft + this.addZoomModifier(this.getClientX(e) - this.initialX);
-        this.positionTop = this.initialTop + this.addZoomModifier(this.getClientY(e) - this.initialY);
-        break;
-      }
-      case 90:
-      case -270: {
-        this.positionLeft = this.initialLeft + this.addZoomModifier(this.getClientY(e) - this.initialY);
-        this.positionTop = this.initialTop + this.addZoomModifier(-this.getClientX(e) + this.initialX);
-        break;
-      }
-      case 180:
-      case -180: {
-        this.positionLeft = this.initialLeft + this.addZoomModifier(-this.getClientX(e) + this.initialX);
-        this.positionTop = this.initialTop + this.addZoomModifier(-this.getClientY(e) + this.initialY);
-        break;
-      }
-      case 270:
-      case -90: {
-        this.positionLeft = this.initialLeft + this.addZoomModifier(-this.getClientY(e) + this.initialY);
-        this.positionTop = this.initialTop + this.addZoomModifier(this.getClientX(e) - this.initialX);
-        break;
-      }
-    }
+    this.galleryFilePositioning.moveImageRelativeToPosition(this.getClientX(e), this.getClientY(e));
   }
 
   touchStart(e: TouchEvent | MouseEvent) {
@@ -333,74 +273,8 @@ export class TSqGalleryViewerComponent {
     return e instanceof MouseEvent ? e.clientY : e.touches[0].pageY;
   }
 
-  private addZoomModifier(value: number) {
-    return value * ((2 - this.imageZoom) * 1.1);
-  }
-
-  private setImageZoom(distance: number, replace = false) {
-    this.imageZoom = replace ? distance : this.imageZoom + distance;
-
-    this.canMove = this.imageZoom > 1.0;
-    this.canZoomIn = this.imageZoom < 1.8;
-    this.canZoomOut = this.imageZoom > 0.5;
-  }
-
-  private adjustHorizontalPositionOnZoom() {
-    switch (this.imageRotation % 360) {
-      case 0:
-      case 180:
-      case -180:
-      case -360: {
-        this.positionLeft = this.imageZoom > 1.0 ? this.positionLeft / 2 : 0;
-        break;
-      }
-      default: {
-        this.positionTop = this.imageZoom > 1.0 ? this.positionTop / 2 : 0;
-        break;
-      }
-    }
-  }
-
-  private moveImageTo(direction: SupportedScrollDirection, distance: number) {
-    const directionMod = direction === SupportedScrollDirection.UP || direction === SupportedScrollDirection.LEFT ? 1 : -1;
-    const nextDistance = this.addZoomModifier(distance);
-    const imageRotationMod = direction === SupportedScrollDirection.LEFT || direction === SupportedScrollDirection.RIGHT ? 90 : 0;
-
-    switch ((this.imageRotation + imageRotationMod) % 360) {
-      case 0:
-      case -360: {
-        this.positionTop += directionMod * nextDistance;
-        break;
-      }
-      case 90:
-      case -270: {
-        this.positionLeft += directionMod * nextDistance;
-        break;
-      }
-      case 180:
-      case -180: {
-        this.positionTop += -directionMod * nextDistance;
-        break;
-      }
-      case 270:
-      case -90: {
-        this.positionLeft += -directionMod * nextDistance;
-        break;
-      }
-    }
-  }
-
-  private resetImagePosition(resetRotation: boolean = true) {
-    this.setImageZoom(1, true);
-    this.initialX = this.initialY = this.initialLeft = this.initialTop = this.positionLeft = this.positionTop = 0;
-
-    if (resetRotation) {
-      this.imageRotation = 0;
-    }
-  }
-
   private setCurrentFile(index: number) {
-    this.resetImagePosition();
+    this.galleryFilePositioning.resetImagePosition();
 
     this.pdfLoading = false;
     this.selectedFileIndex = index || 0;

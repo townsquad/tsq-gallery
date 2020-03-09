@@ -21,7 +21,7 @@
 
   <h1>Display viewer inline</h1>
   <div> <input type="checkbox" [checked]="hasMiniPreview" (change)="hasMiniPreview = !hasMiniPreview"> Show minis</div>
-  <div style="height: 600px;">
+  <div class="inline-lib-demo">
     <tsq-gallery [files]="files"
                  [displayInline]="true"
                  [keepOpen]="true"

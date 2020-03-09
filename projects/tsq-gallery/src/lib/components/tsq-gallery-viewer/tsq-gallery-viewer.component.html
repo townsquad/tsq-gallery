@@ -26,21 +26,21 @@
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'cloud-download-alt']"></fa-icon>
           </div>
-          <div (click)="$event.stopPropagation(); zoomIn()"
-               [class.disabled]="!canZoomIn"
+          <div (click)="$event.stopPropagation(); galleryFilePositioning.zoomIn()"
+               [class.disabled]="!galleryFilePositioning.canZoomIn"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'search-plus']"></fa-icon>
           </div>
-          <div (click)="$event.stopPropagation(); zoomOut()"
-               [class.disabled]="!canZoomOut"
+          <div (click)="$event.stopPropagation(); galleryFilePositioning.zoomOut()"
+               [class.disabled]="!galleryFilePositioning.canZoomOut"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'search-minus']"></fa-icon>
           </div>
-          <div (click)="$event.stopPropagation(); turnLeft()"
+          <div (click)="$event.stopPropagation(); galleryFilePositioning.turnLeft()"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon>
           </div>
-          <div (click)="$event.stopPropagation(); turnRight()"
+          <div (click)="$event.stopPropagation(); galleryFilePositioning.turnRight()"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'redo-alt']"></fa-icon>
           </div>
@@ -71,11 +71,11 @@
 
           <img *ngIf="selectedFileToDisplay.type === 'image'"
                draggable="false"
-               [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : canMove? 'grab' : 'default'}"
+               [ngStyle]="{'transform': 'rotateZ('+galleryFilePositioning.imageRotation+'deg) scale('+galleryFilePositioning.imageZoom+') translateY('+galleryFilePositioning.positionTop+'px) translateX('+galleryFilePositioning.positionLeft+'px)', 'cursor': isMoving? 'grabbing' : galleryFilePositioning.canMove? 'grab' : 'default'}"
                [src]="selectedFileToDisplay.displayUrl"
                [alt]="selectedFileToDisplay.displayAlt"
-               (mousedown)="$event.preventDefault(); canMove && dragDown($event)"
-               (mousemove)="canMove && isMoving && dragMove($event)"
+               (mousedown)="$event.preventDefault(); galleryFilePositioning.canMove && dragDown($event)"
+               (mousemove)="galleryFilePositioning.canMove && isMoving && dragMove($event)"
                (touchmove)="dragMove($event)"
                (touchstart)="dragDown($event, true)"
                (click)="$event.stopPropagation()">
@@ -83,9 +83,9 @@
           <div *ngIf="selectedFileToDisplay.type === 'pdf'"
                class="pdf-container"
                draggable="false"
-               [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : canMove? 'grab' : 'default'}"
-               (mousedown)="$event.preventDefault(); canMove && dragDown($event)"
-               (mousemove)="canMove && isMoving && dragMove($event)"
+               [ngStyle]="{'transform': 'rotateZ('+galleryFilePositioning.imageRotation+'deg) scale('+galleryFilePositioning.imageZoom+') translateY('+galleryFilePositioning.positionTop+'px) translateX('+galleryFilePositioning.positionLeft+'px)', 'cursor': isMoving? 'grabbing' : galleryFilePositioning.canMove? 'grab' : 'default'}"
+               (mousedown)="$event.preventDefault(); galleryFilePositioning.canMove && dragDown($event)"
+               (mousemove)="galleryFilePositioning.canMove && isMoving && dragMove($event)"
                (touchmove)="dragMove($event)"
                (touchstart)="dragDown($event, true)"
                (click)="$event.stopPropagation()">
