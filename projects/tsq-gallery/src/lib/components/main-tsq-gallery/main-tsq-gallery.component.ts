@@ -1,4 +1,7 @@
-import {Component, Input, TemplateRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+
+import {of, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 import {TSqGalleryFileModel} from '../../models/tsq-gallery-file.model';
 import {
@@ -13,7 +16,7 @@ import {TSqGalleryViewerComponent} from '../tsq-gallery-viewer/tsq-gallery-viewe
   templateUrl: 'main-tsq-gallery.component.html',
   styleUrls: ['main-tsq-gallery.component.scss'],
 })
-export class TSqGalleryComponent {
+export class TSqGalleryComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild(TSqGalleryViewerComponent, {static: false}) viewer: TSqGalleryViewerComponent;
 
@@ -71,12 +74,39 @@ export class TSqGalleryComponent {
   /** Option to change the displayed image when the files is of an unsupported format.  */
   @Input() invalidFormatDisplayImage: string;
 
+  /** Show the viewer inline instead of a dialog. */
+  @Input() displayInline = false;
+
+  /** When inline, always keeps the viewer open. */
+  @Input() keepOpen = false;
+
+  private componentDestroyed$ = new Subject();
+
+  ngAfterViewInit() {
+    if (this.displayInline && this.keepOpen) {
+      of(this.files)
+        .pipe(takeUntil(this.componentDestroyed$))
+        .subscribe((files) => {
+          if (!!files && files.length > 0) {
+            if (!this.viewer.isViewerOpen) {
+              setTimeout(() => this.contextOpen(), 1000);
+            }
+          }
+        });
+    }
+  }
+
+  ngOnDestroy() {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.unsubscribe();
+  }
+
   /** Open preview for file of Index. */
   contextOpen = (index?: number) => {
     this.viewer.open(index);
   }
 
-  getListItemContext(file: TSqGalleryFileModel, index: number): TSqGalleryListItemTemplateRefContext {
+  listItemContext(file: TSqGalleryFileModel, index: number): TSqGalleryListItemTemplateRefContext {
     return {
       index,
       name: !!file && file.name,

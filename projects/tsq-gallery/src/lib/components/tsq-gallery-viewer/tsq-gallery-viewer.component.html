@@ -1,6 +1,7 @@
 <ng-container *ngIf="isViewerOpen">
   <div id="tsq-gallery-viewer"
        tabindex="0"
+       [class.show-inline]="displayInline"
        [ngStyle]="{'display': isViewerOpen ? 'flex' : 'none', 'cursor': isMoving? 'grabbing' : 'default'}"
        (keydown)="onKeyDown($event)"
        (mouseup)="dragUp()"
@@ -44,6 +45,7 @@
             <fa-icon [icon]="['fas', 'redo-alt']"></fa-icon>
           </div>
           <div (click)="$event.stopPropagation(); close()"
+               *ngIf="!keepOpen"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'times-circle']"></fa-icon>
           </div>

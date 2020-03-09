@@ -41,6 +41,8 @@ export class TSqGalleryViewerComponent {
   @Input() displayNavigationIndex: boolean;
   @Input() allowDownload: boolean;
   @Input() invalidFormatDisplayImage: string;
+  @Input() displayInline: boolean;
+  @Input() keepOpen: boolean;
 
   initialX = 0;
   initialY = 0;
@@ -76,17 +78,19 @@ export class TSqGalleryViewerComponent {
     this.isViewerOpen = true;
     this.setCurrentFile(index);
 
-    this.renderer.setStyle(document.body, 'overflow', 'hidden');
+    if (!this.displayInline) {
+      this.renderer.setStyle(document.body, 'overflow', 'hidden');
+      this.renderer.setStyle(document.body, 'overscroll-behavior-x', 'none');
+    }
+
     setTimeout(() => {
       if (!!this.backdropRef) {
         this.backdropRef.nativeElement.focus();
+
+        const throttleFunc = throttle(this.onWindowScroll, 1);
+        this.scrollListener = this.renderer.listen(this.backdropRef.nativeElement, 'wheel', throttleFunc);
       }
     }, 10);
-
-    const throttleFunc = throttle(this.onWindowScroll, 1);
-    this.scrollListener = this.renderer.listen('document', 'wheel', throttleFunc);
-
-    this.renderer.setStyle(document.body, 'overscroll-behavior-x', 'none');
   }
 
   pdfOpenOnProgress(progressData: PDFProgressData) {
@@ -97,13 +101,14 @@ export class TSqGalleryViewerComponent {
     this.isViewerOpen = false;
     this.setCurrentFile(undefined);
 
-    this.renderer.removeStyle(document.body, 'overflow');
+    if (!this.displayInline) {
+      this.renderer.removeStyle(document.body, 'overflow');
+      this.renderer.removeStyle(document.body, 'overscroll-behavior-x');
+    }
 
     if (!!this.scrollListener) {
       this.scrollListener();
     }
-
-    this.renderer.removeStyle(document.body, 'overscroll-behavior-x');
   }
 
   goForward(addDelay = false) {
@@ -131,7 +136,7 @@ export class TSqGalleryViewerComponent {
   closeBackdrop($event: TouchEvent | MouseEvent) {
     $event.stopPropagation();
 
-    if (this.backdropClickClose && !this.isMoving && !this.showLoading) {
+    if (this.backdropClickClose && !this.isMoving && !this.showLoading && !this.keepOpen) {
       this.close();
     }
   }
@@ -170,6 +175,8 @@ export class TSqGalleryViewerComponent {
   }
 
   onWindowScroll = ($event: WheelEvent) => {
+    $event.preventDefault();
+
     if ($event.ctrlKey) {
       // tslint:disable-next-line: no-string-literal
       if (!window['chrome']) {
@@ -212,7 +219,7 @@ export class TSqGalleryViewerComponent {
         break;
       }
       case SupportedKeys.Esc: {
-        if (!this.showLoading) {
+        if (!this.showLoading && !this.keepOpen) {
           this.close();
         }
         break;
@@ -382,11 +389,11 @@ export class TSqGalleryViewerComponent {
     this.resetImagePosition();
 
     this.pdfLoading = false;
-    this.selectedFileIndex = index;
+    this.selectedFileIndex = index || 0;
     this.selectedFileToDisplay = !!this.galleryFiles && this.galleryFiles[index || 0];
 
-    this.canGoBack = index > 0;
-    this.canGoForward = index < this.galleryFiles.length - 1;
+    this.canGoBack = this.selectedFileIndex > 0;
+    this.canGoForward = this.selectedFileIndex  < this.galleryFiles.length - 1;
 
     this.topViewerContext = {
       file: this.selectedFileToDisplay,
