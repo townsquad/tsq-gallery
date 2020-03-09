@@ -62,6 +62,7 @@ export class TSqGalleryViewerComponent {
   canZoomOut = false;
   canMove = false;
   isViewerOpen = false;
+  expanded = false;
   navigationDelay = false;
   pdfLoading = false;
   isMoving = false;
@@ -77,11 +78,6 @@ export class TSqGalleryViewerComponent {
   open(index?: number) {
     this.isViewerOpen = true;
     this.setCurrentFile(index);
-
-    if (!this.displayInline) {
-      this.renderer.setStyle(document.body, 'overflow', 'hidden');
-      this.renderer.setStyle(document.body, 'overscroll-behavior-x', 'none');
-    }
 
     setTimeout(() => {
       if (!!this.backdropRef) {
@@ -100,11 +96,6 @@ export class TSqGalleryViewerComponent {
   close() {
     this.isViewerOpen = false;
     this.setCurrentFile(undefined);
-
-    if (!this.displayInline) {
-      this.renderer.removeStyle(document.body, 'overflow');
-      this.renderer.removeStyle(document.body, 'overscroll-behavior-x');
-    }
 
     if (!!this.scrollListener) {
       this.scrollListener();
@@ -136,8 +127,12 @@ export class TSqGalleryViewerComponent {
   closeBackdrop($event: TouchEvent | MouseEvent) {
     $event.stopPropagation();
 
-    if (this.backdropClickClose && !this.isMoving && !this.showLoading && !this.keepOpen) {
-      this.close();
+    if (this.backdropClickClose && !this.isMoving && !this.showLoading) {
+      if (!this.keepOpen) {
+        this.close();
+      } else if (this.expanded) {
+        this.expanded = false;
+      }
     }
   }
 
@@ -219,7 +214,9 @@ export class TSqGalleryViewerComponent {
         break;
       }
       case SupportedKeys.Esc: {
-        if (!this.showLoading && !this.keepOpen) {
+        if (this.expanded) {
+          this.expanded = false;
+        } else if (!this.showLoading && !this.keepOpen) {
           this.close();
         }
         break;
