@@ -158,6 +158,7 @@ export class TSqGalleryViewerComponent {
 
   onWindowScroll = ($event: WheelEvent) => {
     $event.preventDefault();
+    $event.stopPropagation();
 
     if ($event.ctrlKey) {
       if (!window['chrome']) {
@@ -188,6 +189,8 @@ export class TSqGalleryViewerComponent {
   }
 
   onKeyDown(keyboardEvent: KeyboardEvent) {
+    keyboardEvent.preventDefault();
+
     const key = keyboardEvent.key;
 
     switch (key) {
