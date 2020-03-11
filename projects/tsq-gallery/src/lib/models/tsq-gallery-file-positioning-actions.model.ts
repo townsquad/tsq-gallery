@@ -127,12 +127,8 @@ export class TSqGalleryFilePositioningActions {
     }
   }
 
-  resetImagePosition(resetRotation: boolean = true) {
+  resetImagePosition() {
     this.setImageZoom(1, true);
-    this.initialX = this.initialY = this.initialLeft = this.initialTop = this.positionLeft = this.positionTop = 0;
-
-    if (resetRotation) {
-      this.imageRotation = 0;
-    }
+    this.initialX = this.initialY = this.initialLeft = this.initialTop = this.positionLeft = this.positionTop = this.imageRotation = 0;
   }
 }
