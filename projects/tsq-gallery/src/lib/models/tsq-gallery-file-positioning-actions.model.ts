@@ -99,10 +99,6 @@ export class TSqGalleryFilePositioningActions {
     }
   }
 
-  addZoomModifier(value: number) {
-    return value * ((2 - this.imageZoom) * 1.1);
-  }
-
   setImageZoom(distance: number, replace = false) {
     this.imageZoom = replace ? distance : this.imageZoom + distance;
 
@@ -130,5 +126,9 @@ export class TSqGalleryFilePositioningActions {
   resetImagePosition() {
     this.setImageZoom(1, true);
     this.initialX = this.initialY = this.initialLeft = this.initialTop = this.positionLeft = this.positionTop = this.imageRotation = 0;
+  }
+
+  private addZoomModifier(value: number): number {
+    return value * ((2 - this.imageZoom) * 1.1);
   }
 }
