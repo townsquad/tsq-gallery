@@ -80,6 +80,10 @@
     }
   }
 
+  ::ng-deep pdf-viewer .ng2-pdf-viewer-container {
+    overflow-x: unset;
+  }
+
   .viewer-body {
     height: 100%;
     width: 100%;

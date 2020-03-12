@@ -83,24 +83,15 @@
           <div *ngIf="selectedFileToDisplay.type === 'pdf'"
                class="pdf-container"
                draggable="false"
-               [ngStyle]="{'transform': 'rotateZ('+galleryFilePositioning.imageRotation+'deg) scale('+galleryFilePositioning.imageZoom+') translateY('+galleryFilePositioning.positionTop+'px) translateX('+galleryFilePositioning.positionLeft+'px)', 'cursor': isMoving? 'grabbing' : galleryFilePositioning.canMove? 'grab' : 'default'}"
-               (mousedown)="$event.preventDefault(); galleryFilePositioning.canMove && dragDown($event)"
-               (mousemove)="galleryFilePositioning.canMove && isMoving && dragMove($event)"
+               [ngStyle]="{'transform': 'rotateZ('+galleryFilePositioning.imageRotation+'deg) scale('+galleryFilePositioning.imageZoom+') translateY('+galleryFilePositioning.positionTop+'px) translateX('+galleryFilePositioning.positionLeft+'px)', 'cursor': isMoving? 'grabbing' : 'grab'}"
+               (mousedown)="$event.preventDefault(); dragDown($event)"
+               (mousemove)="isMoving && dragMove($event)"
                (touchmove)="dragMove($event)"
                (touchstart)="dragDown($event, true)"
                (click)="$event.stopPropagation()">
 
-            <pdf-viewer *ngIf="!expanded"
-                        [src]="selectedFileToDisplay.displayUrl"
-                        [original-size]="false"
-                        [autoresize]="true"
-                        (on-progress)="pdfOpenOnProgress($event)"
-                        [render-text]="false"></pdf-viewer>
-
-            <pdf-viewer *ngIf="expanded"
-                        [src]="selectedFileToDisplay.displayUrl"
-                        [original-size]="false"
-                        [autoresize]="true"
+            <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
+                        [original-size]="true"
                         (on-progress)="pdfOpenOnProgress($event)"
                         [render-text]="false"></pdf-viewer>
           </div>
