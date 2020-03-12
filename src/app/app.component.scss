@@ -85,5 +85,11 @@
 
 .inline-lib-demo {
   height: 800px;
+  display: flex;
   background-color: lightsteelblue;
+  width: 50%;
+
+  > tsq-gallery {
+    width: 100%;
+  }
 }

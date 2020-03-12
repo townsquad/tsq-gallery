@@ -90,7 +90,15 @@
                (touchstart)="dragDown($event, true)"
                (click)="$event.stopPropagation()">
 
-            <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
+            <pdf-viewer *ngIf="!expanded"
+                        [src]="selectedFileToDisplay.displayUrl"
+                        [original-size]="false"
+                        [autoresize]="true"
+                        (on-progress)="pdfOpenOnProgress($event)"
+                        [render-text]="false"></pdf-viewer>
+
+            <pdf-viewer *ngIf="expanded"
+                        [src]="selectedFileToDisplay.displayUrl"
                         [original-size]="false"
                         [autoresize]="true"
                         (on-progress)="pdfOpenOnProgress($event)"

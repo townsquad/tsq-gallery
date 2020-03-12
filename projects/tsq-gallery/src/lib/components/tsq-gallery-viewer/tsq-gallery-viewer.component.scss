@@ -73,6 +73,11 @@
     height: 200px;
     margin: 0 10px 10px 10px;
     overflow: hidden;
+
+    > pdf-viewer {
+      display: block;
+      max-width: 100%;
+    }
   }
 
   .viewer-body {
