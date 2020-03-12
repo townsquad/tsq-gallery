@@ -1,6 +1,6 @@
 {
   "name": "@townsquad/tsq-gallery",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Angular file preview and carrousel viewer for images and pdfs.",
   "repository": {
     "type": "git",
