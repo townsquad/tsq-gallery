@@ -1,4 +1,17 @@
-.cards-container {
+.tsq-gallery {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  tsq-gallery-viewer {
+    flex-grow: 1;
+    flex-basis: 0;
+    overflow: hidden;
+  }
+}
+
+
+.default-cards-container {
   padding: 16px;
 
   background: white;

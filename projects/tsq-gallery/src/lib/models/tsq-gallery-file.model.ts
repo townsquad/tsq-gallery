@@ -1,6 +1,6 @@
 export class TSqGalleryFileModel {
   name: string;
-  type: string;
+  type: 'pdf' | 'image' | 'file';
   displayUrl: string;
   displayAlt?: string;
   downloadUrl?: string;

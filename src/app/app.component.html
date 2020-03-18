@@ -19,7 +19,16 @@
                [imagePreviewTemplate]="singleNav"
                [bottomViewerTemplate]="bottomViewerTemplate"></tsq-gallery>
 
+  <h1>Display viewer inline</h1>
+  <div> <input type="checkbox" [checked]="hasMiniPreview" (change)="hasMiniPreview = !hasMiniPreview"> Show minis</div>
+  <div class="inline-lib-demo">
+    <tsq-gallery [files]="files"
+                 [displayInline]="true"
+                 [keepOpen]="true"
+                 [hasMiniPreviews]="hasMiniPreview"></tsq-gallery>
+  </div>
 </div>
+
 
 <ng-template #imagePreviewTemplate
              let-index="index" let-name="name" let-url="url" let-alt="alt" let-fns="fns">

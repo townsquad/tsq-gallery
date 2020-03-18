@@ -11,7 +11,8 @@ Import to your app.modules.
 
 ## Demo
 
-For demo, check the Github page.
+Install dependencies via `yarn` or `npm install`;
+Run locally at [localhost:4200](http://localhost:4200/) with `ng serve`
 
 ## Params
 
@@ -34,3 +35,5 @@ For demo, check the Github page.
 - **loadingTemplate** - Override the loader shown at the Viewer.
 - **allowDownload** - Toggle display the option to download files on the Viewer.
 - **invalidFormatDisplayImage** - Option to change the displayed image when the files is of an unsupported format.
+- **displayInline** -  Show the viewer inline instead of a dialog.
+- **keepOpen** -  When inline, always keeps the viewer open.

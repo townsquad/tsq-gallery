@@ -9,6 +9,7 @@ import {
   faSearchPlus,
   faUndoAlt,
   faRedoAlt,
+  faExpand,
   faTimesCircle,
   faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
@@ -31,6 +32,6 @@ import {TSqGalleryViewerComponent} from './components/tsq-gallery-viewer/tsq-gal
 })
 export class TSqGalleryModule {
   constructor(library: FaIconLibrary) {
-    library.addIcons(faCloudDownloadAlt, faSearchMinus, faSearchPlus, faUndoAlt, faRedoAlt, faTimesCircle, faEyeSlash);
+    library.addIcons(faCloudDownloadAlt, faSearchMinus, faSearchPlus, faUndoAlt, faRedoAlt, faExpand, faTimesCircle, faEyeSlash);
   }
 }
