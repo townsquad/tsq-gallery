@@ -8,7 +8,7 @@
        (touchstart)="touchStart($event)"
        (touchmove)="touchMove($event)"
        (touchend)="touchEnd()"
-       (click)="closeBackdrop()"
+       (click)="closeBackdrop($event)"
        #backdrop
        [@fadeInOut]>
 
