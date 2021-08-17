@@ -6,7 +6,7 @@ It uses [ng2-pdf-viewer](https://github.com/VadimDez/ng2-pdf-viewer) to display 
 
 ## Usage
 
-Install via `yarn tsq-gallery` or `npm install tsq-gallery`;
+Install via `yarn @townsquad/tsq-gallery` or `npm i @townsquad/tsq-gallery`;
 Import to your app.modules.
 
 ## Demo
