@@ -1,6 +1,7 @@
 <ng-container *ngIf="isViewerOpen">
   <div id="tsq-gallery-viewer"
        tabindex="0"
+       [class.show-inline]="displayInline && !expanded"
        [ngStyle]="{'display': isViewerOpen ? 'flex' : 'none', 'cursor': isMoving? 'grabbing' : 'default'}"
        (keydown)="onKeyDown($event)"
        (mouseup)="dragUp()"
@@ -18,32 +19,38 @@
       <div [ngClass]="topViewerClass || 'viewer-top-default'"
            *ngIf="!topViewerTemplate">
         <div class="title-container"><span>{{selectedFileToDisplay.name}}</span></div>
-        <div *ngIf="files.length > 1">{{selectedFileIndex + 1}} / {{files.length}}</div>
+        <div *ngIf="galleryFiles.length > 1">{{selectedFileIndex + 1}} / {{galleryFiles.length}}</div>
         <div>
           <div (click)="$event.stopPropagation(); downloadFile()"
                *ngIf="allowDownload"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'cloud-download-alt']"></fa-icon>
           </div>
-          <div (click)="$event.stopPropagation(); zoomIn()"
-               [class.disabled]="!canZoomIn"
+          <div (click)="$event.stopPropagation(); galleryFilePositioning.zoomIn()"
+               [class.disabled]="!galleryFilePositioning.canZoomIn"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'search-plus']"></fa-icon>
           </div>
-          <div (click)="$event.stopPropagation(); zoomOut()"
-               [class.disabled]="!canZoomOut"
+          <div (click)="$event.stopPropagation(); galleryFilePositioning.zoomOut()"
+               [class.disabled]="!galleryFilePositioning.canZoomOut"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'search-minus']"></fa-icon>
           </div>
-          <div (click)="$event.stopPropagation(); turnLeft()"
+          <div (click)="$event.stopPropagation(); galleryFilePositioning.turnLeft()"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'undo-alt']"></fa-icon>
           </div>
-          <div (click)="$event.stopPropagation(); turnRight()"
+          <div (click)="$event.stopPropagation(); galleryFilePositioning.turnRight()"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'redo-alt']"></fa-icon>
           </div>
+          <div (click)="$event.stopPropagation(); expand()"
+                *ngIf="displayInline"
+                class="pointer-cursor action">
+          <fa-icon [icon]="['fas', 'expand']"></fa-icon>
+          </div>
           <div (click)="$event.stopPropagation(); close()"
+               *ngIf="!keepOpen"
                class="pointer-cursor action">
             <fa-icon [icon]="['fas', 'times-circle']"></fa-icon>
           </div>
@@ -51,24 +58,24 @@
       </div>
     </div>
 
-    <ng-container *ngIf="!!files && !!selectedFileToDisplay">
+    <ng-container *ngIf="!!galleryFiles && !!selectedFileToDisplay">
       <div class="viewer-container">
         <div class="viewer-body"
              [class.navigation]="displayNavigation">
           <div *ngIf="displayNavigation"
               class="nav-action"
-              [class.disabled]="!canGoBack"
+              [class.disabled]="!canGoBack || navigationDelay"
               (click)="$event.stopPropagation(); goBack()">
             &lsaquo;
           </div>
 
           <img *ngIf="selectedFileToDisplay.type === 'image'"
                draggable="false"
-               [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : canDrag? 'grab' : 'default'}"
+               [ngStyle]="{'transform': 'rotateZ('+galleryFilePositioning.imageRotation+'deg) scale('+galleryFilePositioning.imageZoom+') translateY('+galleryFilePositioning.positionTop+'px) translateX('+galleryFilePositioning.positionLeft+'px)', 'cursor': isMoving? 'grabbing' : galleryFilePositioning.canMove? 'grab' : 'default'}"
                [src]="selectedFileToDisplay.displayUrl"
                [alt]="selectedFileToDisplay.displayAlt"
-               (mousedown)="$event.preventDefault(); canDrag && dragDown($event)"
-               (mousemove)="canDrag && isMoving && dragMove($event)"
+               (mousedown)="$event.preventDefault(); galleryFilePositioning.canMove && dragDown($event)"
+               (mousemove)="galleryFilePositioning.canMove && isMoving && dragMove($event)"
                (touchmove)="dragMove($event)"
                (touchstart)="dragDown($event, true)"
                (click)="$event.stopPropagation()">
@@ -76,17 +83,16 @@
           <div *ngIf="selectedFileToDisplay.type === 'pdf'"
                class="pdf-container"
                draggable="false"
-               [ngStyle]="{'transform': 'rotateZ('+imageRotation+'deg) scale('+imageZoom+') translateY('+positionTop+'px) translateX('+positionLeft+'px)', 'cursor': isMoving? 'grabbing' : canDrag? 'grab' : 'default'}"
-               (mousedown)="$event.preventDefault(); canDrag && dragDown($event)"
-               (mousemove)="canDrag && isMoving && dragMove($event)"
+               [ngStyle]="{'transform': 'rotateZ('+galleryFilePositioning.imageRotation+'deg) scale('+galleryFilePositioning.imageZoom+') translateY('+galleryFilePositioning.positionTop+'px) translateX('+galleryFilePositioning.positionLeft+'px)', 'cursor': isMoving? 'grabbing' : 'grab'}"
+               (mousedown)="$event.preventDefault(); dragDown($event)"
+               (mousemove)="isMoving && dragMove($event)"
                (touchmove)="dragMove($event)"
                (touchstart)="dragDown($event, true)"
                (click)="$event.stopPropagation()">
 
             <pdf-viewer [src]="selectedFileToDisplay.displayUrl"
-                        [original-size]="false"
-                        [autoresize]="true"
-                        (on-progress)="onProgress($event)"
+                        [original-size]="true"
+                        (on-progress)="pdfOpenOnProgress($event)"
                         [render-text]="false"></pdf-viewer>
           </div>
 
@@ -107,8 +113,8 @@
 
           <div *ngIf="displayNavigation"
               class="nav-action"
-              [class.disabled]="!canGoFoward"
-              (click)="$event.stopPropagation(); goFoward()">
+              [class.disabled]="!canGoForward || navigationDelay"
+              (click)="$event.stopPropagation(); goForward()">
             &rsaquo;
           </div>
 

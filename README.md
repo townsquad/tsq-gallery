@@ -18,6 +18,7 @@ Run locally at [localhost:4200](http://localhost:4200/) with `ng serve`
 
 - **files** - Files to be displayed at the Preview and Viewer. Accepted types: images and pdfs. 
 - **showLoading** - Toggle display a Loader over the View content.
+
 ## Options
 
 - **containerClass** - Override the class of the container for the Preview. The class should either have `::ng-deep` (not recommended) or be global.
@@ -34,3 +35,5 @@ Run locally at [localhost:4200](http://localhost:4200/) with `ng serve`
 - **loadingTemplate** - Override the loader shown at the Viewer.
 - **allowDownload** - Toggle display the option to download files on the Viewer.
 - **invalidFormatDisplayImage** - Option to change the displayed image when the files is of an unsupported format.
+- **displayInline** -  Show the viewer inline instead of a dialog.
+- **keepOpen** -  When inline, always keeps the viewer open.

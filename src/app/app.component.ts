@@ -8,6 +8,8 @@ import {TSqGalleryFileModel} from 'tsq-gallery/lib/models/tsq-gallery-file.model
 })
 export class AppComponent {
 
+  hasMiniPreview = true;
+
   files: TSqGalleryFileModel[] = [
     {
       name: 'file_01.png',

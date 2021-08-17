@@ -1,13 +1,15 @@
 {
   "name": "tsq-gallery-test",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "run-local": "ng build tsq-gallery && ng serve",
+    "publish": "ng build tsq-gallery && cd dist/tsq-gallery && npm publish --access public"
   },
   "private": false,
   "dependencies": {

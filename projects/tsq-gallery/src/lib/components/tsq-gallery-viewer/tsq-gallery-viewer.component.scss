@@ -73,6 +73,15 @@
     height: 200px;
     margin: 0 10px 10px 10px;
     overflow: hidden;
+
+    > pdf-viewer {
+      display: block;
+      max-width: 100%;
+    }
+  }
+
+  ::ng-deep pdf-viewer .ng2-pdf-viewer-container {
+    overflow-x: unset;
   }
 
   .viewer-body {
@@ -84,22 +93,6 @@
 
     .pdf-container {
       max-height: 100%;
-
-      @media (max-width: 880px) {
-        zoom: 0.7;
-      }
-
-      @media (max-width: 670px) {
-        zoom: 0.5;
-      }
-
-      @media (max-width: 460px) {
-        zoom: 0.4;
-      }
-
-      @media (max-width: 380px) {
-        zoom: 0.3;
-      }
     }
 
     img {
@@ -124,7 +117,11 @@
       cursor: pointer;
       user-select: none;
 
+      z-index: 2;
+      text-shadow: 0px 2px 3px #615656a8;
+
       &.disabled {
+        text-shadow: none;
         cursor: default;
         color: gray;
       }
@@ -147,6 +144,14 @@
         text-align: center;
       }
     }
+  }
+
+  &.show-inline {
+    position: relative;
+    height: 100%;
+    z-index: 1;
+
+    background-color: #00000000;
   }
 }
 
