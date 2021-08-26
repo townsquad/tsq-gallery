@@ -24,7 +24,7 @@
     "@fortawesome/angular-fontawesome": "^0.5.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
     "@fortawesome/free-solid-svg-icons": "^5.10.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "ng2-pdf-viewer": "^6.4.1",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",
